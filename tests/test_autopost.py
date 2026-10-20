@@ -72,6 +72,24 @@ def test_caption_keeps_title_inside_cta():
     assert '"Lock In Mike Tyson"' in out
 
 
+def test_caption_title_with_ampersand_matches_folder_name():
+    raw = """SUCCESS HUNTERS / 21.10.2026 / POST 1
+
+911 & Blackbird
+
+some machines make you look twice.
+
+a classic silhouette on the road. another above it.
+
+shop now. "911 & Blackbird". link in bio.
+
+instagram caption
+"""
+    out = captions.clean_caption(raw, "911 And Blackbird")
+    assert out.startswith("some machines make you look twice.\n")
+    assert out.endswith('shop now. "911 & Blackbird". link in bio.')
+
+
 def test_caption_empty_raises():
     with pytest.raises(ValueError):
         captions.clean_caption("SUCCESS HUNTERS / 1.1.2026 / POST 1\ninstagram caption", None)

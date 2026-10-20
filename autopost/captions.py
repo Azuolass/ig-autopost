@@ -34,8 +34,13 @@ _SENTENCE_END = re.compile(r"[.!?…:\"”)\]]\s*$")
 IG_CAPTION_LIMIT = 2200
 
 
+def _norm(s: str) -> str:
+    s = s.lower().replace("&", " and ").replace("+", " and ")
+    return re.sub(r"[^a-z0-9]+", "", s)
+
+
 def _is_header(line: str, title: str | None) -> bool:
-    if title and line.strip().lower() == title.strip().lower():
+    if title and _norm(line) == _norm(title):
         return True
     return any(p.match(line) for p in _HEADER_PATTERNS)
 
