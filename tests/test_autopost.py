@@ -250,26 +250,42 @@ def test_aspect_error_detection():
 # ---- music --------------------------------------------------------------------
 
 LIB = [
-    {"title": "Calm Song", "artist": "A", "tags": ["calm", "focus"]},
-    {"title": "Hype Song", "artist": "B", "tags": ["hype", "hip-hop"]},
-    {"title": "Epic Song", "artist": "C", "tags": ["epic", "cinematic"]},
+    {"title": "Song A", "artist": "X", "reels": "10K"},
+    {"title": "Song B", "artist": "Y"},
+    {"title": "Song C", "artist": "Z"},
 ]
 
 
-def test_music_matches_post_mood():
-    assert music.pick_song("k", "Lock In Mike Tyson", "focus looks quiet.", LIB, {}, [])[0] == "Calm Song – A"
-    assert music.pick_song("k", "Fear Of God", "", LIB, {}, [])[0] == "Epic Song – C"
+def test_music_starts_at_first_song():
+    song, idx, why = music.pick_song("2026-10-21#1", LIB, {}, {})
+    assert (song, idx) == ("Song A – X (10K reels)", 0)
 
 
-def test_music_plan_overrides_and_recent_avoided():
-    assert music.pick_song("2026-10-21#1", "x", "", LIB, {"2026-10-21#1": "Manual"}, [])[0] == "Manual"
-    got = music.pick_song("k", "Lock In", "focus", LIB, {}, ["Calm Song – A"])[0]
-    assert got != "Calm Song – A"
+def test_music_goes_in_order_and_wraps():
+    state = {"2026-10-20#2": {"song_index": 0}, "2026-10-20#3": {"song_index": 1}}
+    assert music.pick_song("2026-10-21#1", LIB, {}, state)[:2] == ("Song C – Z", 2)
+    state["2026-10-21#1"] = {"song_index": 2}
+    song, idx, why = music.pick_song("2026-10-21#2", LIB, {}, state)
+    assert idx == 0 and "starting again" in why
+
+
+def test_music_ignores_posts_without_index_and_plan_overrides():
+    state = {"2026-10-20#1": {"note": "manual"}, "2026-10-20#2": {"song_index": 1}}
+    assert music.pick_song("2026-10-20#3", LIB, {}, state)[1] == 2
+    assert music.pick_song("k", LIB, {"k": "Manual"}, state)[0] == "Manual"
 
 
 def test_music_empty_library():
-    song, why = music.pick_song("k", "x", "", [], {}, [])
+    song, idx, why = music.pick_song("k", [], {}, {})
     assert song is None and "library.json" in why
+
+
+def test_real_library_is_valid():
+    import json
+    import pathlib
+
+    lib = json.loads((pathlib.Path(__file__).resolve().parent.parent / "music" / "library.json").read_text())
+    assert len(lib) >= 100 and all(s["title"] and s["artist"] for s in lib)
 
 
 def _jpeg_markers(data: bytes) -> set[int]:

@@ -163,8 +163,8 @@ def main(argv=None) -> int:
 
     library = music.load_json(ROOT / "music" / "library.json", [])
     plan = music.load_json(ROOT / "music" / "plan.json", {})
-    recent = [v.get("song") for k, v in sorted(state.items())[-6:] if v.get("song")]
-    song, why = music.pick_song(key, assets.title, caption, library, plan, recent)
+    others = {k: v for k, v in state.items() if k != key}
+    song, song_index, why = music.pick_song(key, library, plan, others)
 
     work = Path(args.preview_dir) / key.replace("#", "_slot")
     jpgs = convert_all(originals, work, pad_to=None)
@@ -195,7 +195,8 @@ def main(argv=None) -> int:
     for m in ([] if args.validate else ig.recent_media(10)):
         if (m.get("caption") or "").strip() == caption.strip():
             print(f"identical caption already on the account: {m.get('permalink')}; not posting again")
-            state[key] = {"media_id": m["id"], "permalink": m.get("permalink"), "song": song, "recovered": True}
+            state[key] = {"media_id": m["id"], "permalink": m.get("permalink"), "song": song,
+                          "song_index": song_index, "recovered": True}
             STATE_FILE.parent.mkdir(exist_ok=True)
             STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False))
             return 0
@@ -234,6 +235,7 @@ def main(argv=None) -> int:
         "title": assets.title,
         "images": len(jpgs),
         "song": song,
+        "song_index": song_index,
         "published_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     STATE_FILE.parent.mkdir(exist_ok=True)
@@ -241,7 +243,7 @@ def main(argv=None) -> int:
 
     msg = f"✅ Išėjo: {assets.title} ({len(jpgs)} nuotr.)\n{link}"
     if song:
-        msg += f"\n\n🎵 Pridėk dainą: {song}\n(⋯ → Edit → Add music)"
+        msg += f"\n\n🎵 Pridėk dainą ({why}):\n{song}\n(telefone: ⋯ → Edit → Add music → Saved)"
     else:
         msg += f"\n\n🎵 {why}"
     if assets.warnings:
