@@ -1,0 +1,50 @@
+name: Reply to comments
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"   # every 15 minutes
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (show what would be replied, post nothing)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: comments
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  comments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install requests
+      - name: Reply
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            python -m autopost.comments --dry-run
+          else
+            python -m autopost.comments
+          fi
+      - name: Save state
+        if: always()
+        run: |
+          git config user.name autopost
+          git config user.email autopost@users.noreply.github.com
+          git add state/comments.json 2>/dev/null || true
+          git diff --cached --quiet || { git commit -m "comments check"; git pull --rebase -q; git push; }

@@ -1,0 +1,284 @@
+{
+  "_comment": "Checked top to bottom; up to two matching templates are combined. A template with 'alert': true (customer issue) is sent alone and also goes to Discord so a person follows up in DMs. 'excludes' drops more generic templates when this one matches. Triggers are regular expressions, case-insensitive.",
+  "templates": [
+    {
+      "id": "damaged",
+      "triggers": [
+        "damaged",
+        "broken",
+        "defective",
+        "arrived (ripped|torn|bent|cracked)"
+      ],
+      "alert": true,
+      "reply": "We're sorry your artwork arrived this way.\n\nPlease send us a DM with your order number and clear photos of the damage and packaging. We'll review everything and help resolve the issue."
+    },
+    {
+      "id": "where_is_my_order",
+      "triggers": [
+        "where('?s| is) my (order|package|print|canvas)",
+        "order status",
+        "haven'?t (received|gotten|got)",
+        "never (arrived|received|came)",
+        "missing (order|package)",
+        "still (waiting|haven'?t)"
+      ],
+      "alert": true,
+      "reply": "We've got you.\n\nSend us a DM with your order number and the email used at checkout. Our team will check the status and get back to you."
+    },
+    {
+      "id": "tracking",
+      "triggers": [
+        "track(ing)?\\b",
+        "tracking number",
+        "track my order"
+      ],
+      "alert": true,
+      "reply": "Absolutely. Once your order ships, you'll receive tracking information.\n\nNeed help? Send us a DM with your order number and we'll look into it."
+    },
+    {
+      "id": "return",
+      "triggers": [
+        "\\breturns?\\b",
+        "exchange",
+        "refund"
+      ],
+      "alert": true,
+      "reply": "We want you to be confident in your purchase.\n\nReturn and exchange eligibility depends on the order and our store policies. Send us a DM with your order number and we'll help you with the next steps."
+    },
+    {
+      "id": "custom_size",
+      "triggers": [
+        "custom size",
+        "different (size|dimensions)",
+        "(bigger|larger|smaller) (size|version|one)",
+        "other sizes?"
+      ],
+      "alert": true,
+      "reply": "Looking for a specific size?\n\nSend us a DM with your preferred dimensions and the artwork name. We'll check what's possible.",
+      "excludes": [
+        "custom",
+        "sizes"
+      ]
+    },
+    {
+      "id": "custom",
+      "triggers": [
+        "custom",
+        "personali[sz]",
+        "customi[sz]",
+        "my own (design|photo|picture)"
+      ],
+      "alert": true,
+      "reply": "Have something specific in mind?\n\nSend us a DM with your idea and the details. We'll let you know what's possible."
+    },
+    {
+      "id": "bulk",
+      "triggers": [
+        "bulk",
+        "wholesale",
+        "multiple prints",
+        "for (our|the) (office|business|company|store)"
+      ],
+      "alert": true,
+      "reply": "Building something bigger?\n\nWe welcome bulk order inquiries for offices, businesses and other spaces. Send us a DM with the artwork names, quantities and sizes you need."
+    },
+    {
+      "id": "discount",
+      "triggers": [
+        "discount",
+        "promo",
+        "coupon",
+        "\\bsale\\b",
+        "\\bdeal\\b",
+        "\\bcode\\b"
+      ],
+      "reply": "Great art is an investment in your space.\n\nCheck successhuntersprints.com for our latest offers and available promotions."
+    },
+    {
+      "id": "digital",
+      "triggers": [
+        "digital",
+        "download",
+        "printable",
+        "\\bpdf\\b",
+        "\\bfile\\b"
+      ],
+      "reply": "Yes. Selected artworks are available as digital downloads.\n\nDownload. Print. Make it yours.\n\nExplore our collection at successhuntersprints.com."
+    },
+    {
+      "id": "framed",
+      "triggers": [
+        "\\bframe[ds]?\\b",
+        "framing"
+      ],
+      "reply": "Yes. Choose from black, white or wood-framed prints.\n\nClean lines. Timeless style.\n\nExplore your options at successhuntersprints.com."
+    },
+    {
+      "id": "canvas_or_poster",
+      "triggers": [
+        "canvas",
+        "poster",
+        "material",
+        "\\bpaper\\b"
+      ],
+      "reply": "Your space. Your choice.\n\nWe offer thin-wrap canvas, thick-wrap canvas, framed prints and unframed posters. Choose the finish that fits your vision."
+    },
+    {
+      "id": "sizes",
+      "triggers": [
+        "\\bsizes?\\b",
+        "dimensions?",
+        "how big",
+        "measurements?",
+        "\\bwhat size"
+      ],
+      "reply": "From small statement pieces to oversized wall art.\n\nOur sizes range from 18x12\" to 60x40\", depending on the artwork.\n\nExplore available sizes at successhuntersprints.com."
+    },
+    {
+      "id": "price",
+      "triggers": [
+        "price",
+        "pricing",
+        "how much",
+        "\\bcost"
+      ],
+      "reply": "Prices depend on the artwork, size and finish.\n\nExplore all available options and current prices at successhuntersprints.com."
+    },
+    {
+      "id": "usa",
+      "triggers": [
+        "\\busa\\b",
+        "united states",
+        "america",
+        "\\bto (the )?us\\b",
+        "\\bin (the )?us\\b",
+        "\\bus shipping"
+      ],
+      "reply": "Absolutely. The USA is our primary market.\n\nShop your next statement piece at successhuntersprints.com."
+    },
+    {
+      "id": "shipping_time",
+      "triggers": [
+        "how long",
+        "delivery time",
+        "shipping time",
+        "when (will|would|does) .*(arrive|ship|come)",
+        "how (fast|quick)"
+      ],
+      "reply": "Every piece is made to order.\n\nProduction and delivery times depend on your location and selected product. You'll receive tracking details once your order ships."
+    },
+    {
+      "id": "worldwide",
+      "triggers": [
+        "worldwide",
+        "international",
+        "ship(ping)? to",
+        "deliver(y)? to",
+        "do you ship",
+        "\\bship\\b"
+      ],
+      "reply": "Yes, we ship worldwide.\n\nChoose your favorite piece, and we'll take care of the rest."
+    },
+    {
+      "id": "quality",
+      "triggers": [
+        "quality",
+        "high res",
+        "resolution",
+        "is it (good|legit)",
+        "\\blegit\\b"
+      ],
+      "reply": "Quality matters.\n\nOur artwork is produced using high-resolution printing and carefully selected materials. Built to elevate your space."
+    },
+    {
+      "id": "recommend",
+      "triggers": [
+        "recommend",
+        "best ?seller",
+        "which one",
+        "most popular"
+      ],
+      "reply": "It depends on the energy you want in your space.\n\nDiscipline. Ambition. Focus. Success.\n\nExplore our collection and find the piece that speaks to you at successhuntersprints.com."
+    },
+    {
+      "id": "where_to_buy",
+      "triggers": [
+        "where (can|do|to|could) (i|we|you)? ?(buy|get|order|find|purchase)",
+        "\\blink\\b",
+        "\\bshop\\b",
+        "purchase",
+        "\\bbuy\\b",
+        "(need|want) (this|one|it|that)",
+        "\\bavailable\\b",
+        "how (do|can) i (get|order)",
+        "\\bsell\\b"
+      ],
+      "reply": "You can find our artwork at successhuntersprints.com.\n\nFind your piece. Own your space."
+    },
+    {
+      "id": "support",
+      "triggers": [
+        "support",
+        "contact",
+        "\\bhelp\\b",
+        "customer service",
+        "email"
+      ],
+      "alert": true,
+      "reply": "Need assistance?\n\nSend us a DM with your question and your order number, if you have one. Our team will be happy to help."
+    }
+  ],
+  "praise": {
+    "enabled": true,
+    "triggers": [
+      "love",
+      "amazing",
+      "beautiful",
+      "\\bfire\\b",
+      "\\bhard\\b",
+      "\\bsick\\b",
+      "\\bdope\\b",
+      "\\bclean\\b",
+      "\\bfacts\\b",
+      "so true",
+      "motivat",
+      "inspir",
+      "\\bgoat\\b",
+      "great",
+      "awesome",
+      "nice",
+      "perfect",
+      "\\bwow\\b",
+      "🔥",
+      "❤",
+      "😍",
+      "👏",
+      "💯",
+      "🙌",
+      "💪",
+      "🐐",
+      "😮",
+      "🤩",
+      "♥"
+    ],
+    "replies": [
+      "Appreciate you.",
+      "Thank you. Glad it speaks to you.",
+      "Means a lot. Thank you.",
+      "Appreciate the support.",
+      "Thank you for being here."
+    ]
+  },
+  "spam": [
+    "https?://",
+    "www\\.",
+    "\\bdm (us|me)\\b",
+    "collab",
+    "promot",
+    "send (it|pic|this) to",
+    "check (my|our) (page|profile|bio)",
+    "followers",
+    "ambassador",
+    "\\bfeature\\b"
+  ]
+}

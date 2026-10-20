@@ -14,5 +14,12 @@
   "media_branch": "media",
   "likes_threshold": 500,
   "likes_watch_posts": 25,
-  "likes_watch_days": 30
+  "likes_watch_days": 30,
+  "comments": {
+    "enabled": false,
+    "watch_posts": 15,
+    "max_comment_age_days": 7,
+    "max_replies_per_run": 20,
+    "seconds_between_replies": 4
+  }
 }
