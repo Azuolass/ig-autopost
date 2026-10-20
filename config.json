@@ -1,0 +1,15 @@
+{
+  "drive_root_folder_id": "1vqN3VFllZk1Dhrp1GeAeAdtpBfRVbEYH",
+  "timezone": "America/New_York",
+  "slots": {
+    "1": "13:00",
+    "2": "17:00",
+    "3": "21:00"
+  },
+  "max_carousel_items": 20,
+  "image_max_width": 1440,
+  "jpeg_quality": 92,
+  "fallback_aspect": "4:5",
+  "graph_api_base": "https://graph.instagram.com/v23.0",
+  "media_branch": "media"
+}
