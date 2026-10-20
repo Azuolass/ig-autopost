@@ -79,6 +79,24 @@ def main() -> int:
         print(f"  ✗ {e}")
         ok = False
 
+    print("== Token auto-refresh (GH_PAT) ==")
+    if os.environ.get("GH_PAT") and os.environ.get("GITHUB_REPOSITORY"):
+        import subprocess
+        from datetime import datetime, timezone
+
+        r = subprocess.run(
+            ["gh", "secret", "set", "AUTOPOST_PAT_CHECK", "--repo", os.environ["GITHUB_REPOSITORY"]],
+            input=datetime.now(timezone.utc).isoformat().encode(), capture_output=True,
+            env={**os.environ, "GH_TOKEN": os.environ["GH_PAT"]},
+        )
+        if r.returncode == 0:
+            print("  ✓ GH_PAT can write repo secrets (token refresh will be saved automatically)")
+        else:
+            print(f"  ✗ GH_PAT cannot write secrets: {r.stderr.decode(errors='ignore')[:200]}")
+            ok = False
+    else:
+        print("  - GH_PAT not set: the Instagram token will expire after 60 days")
+
     print("== Notifications ==")
     if os.environ.get("DISCORD_WEBHOOK_URL") or os.environ.get("TELEGRAM_BOT_TOKEN"):
         from .notify import notify
