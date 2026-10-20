@@ -20,12 +20,16 @@ on:
     - cron: "25 2 * * *"
   workflow_dispatch:
     inputs:
+      auto:
+        description: "Automatic: publish whatever post is due right now (used by the external timer)"
+        type: boolean
+        default: false
       date:
         description: "Post date, New York (YYYY-MM-DD)"
-        required: true
+        required: false
       slot:
         description: "Slot: 1 = 13:00, 2 = 17:00, 3 = 21:00 NY"
-        required: true
+        required: false
         default: "1"
       dry_run:
         description: "Dry run (prepare and preview, do not publish)"
@@ -72,6 +76,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             python -m autopost.publish --cron "${{ github.event.schedule }}"
+          elif [ "${{ inputs.auto }}" = "true" ]; then
+            python -m autopost.publish --auto
           else
             ARGS="--date ${{ inputs.date }} --slot ${{ inputs.slot }}"
             [ "${{ inputs.dry_run }}" = "true" ] && ARGS="$ARGS --dry-run"
@@ -86,7 +92,7 @@ jobs:
           git config user.name autopost
           git config user.email autopost@users.noreply.github.com
           git add state/published.json 2>/dev/null || true
-          git diff --cached --quiet || { git commit -m "published ${{ github.event.schedule || inputs.date }}"; git pull --rebase -q; git push; }
+          git diff --cached --quiet || { git commit -m "published ${{ github.event.schedule || inputs.date || 'auto' }}"; git pull --rebase -q; git push; }
 
       - name: Upload preview
         if: always()

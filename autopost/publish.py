@@ -83,7 +83,9 @@ def resolve_target(args) -> tuple[date, int] | None:
     if args.cron:
         when = schedule.intended_utc(args.cron, datetime.now(timezone.utc))
         return schedule.slot_for(when, CONFIG["slots"], CONFIG["timezone"])
-    sys.exit("give --cron or --date/--slot")
+    if args.auto:
+        return schedule.slot_for(datetime.now(timezone.utc), CONFIG["slots"], CONFIG["timezone"])
+    sys.exit("give --cron, --auto or --date/--slot")
 
 
 def fetch_post(day: date, slot: int):
@@ -131,6 +133,8 @@ def convert_all(originals, out_dir: Path, pad_to: str | None) -> list[Path]:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cron")
+    ap.add_argument("--auto", action="store_true",
+                    help="use the current time: publish if now is inside a posting slot (for external triggers)")
     ap.add_argument("--date")
     ap.add_argument("--slot")
     ap.add_argument("--dry-run", action="store_true")
@@ -140,7 +144,7 @@ def main(argv=None) -> int:
     ap.add_argument("--preview-dir", default="preview")
     args = ap.parse_args(argv)
 
-    if args.cron and not os.environ.get("IG_ACCESS_TOKEN"):
+    if (args.cron or args.auto) and not os.environ.get("IG_ACCESS_TOKEN"):
         print("IG_ACCESS_TOKEN is not set yet: setup not finished, skipping scheduled run")
         return 0
 

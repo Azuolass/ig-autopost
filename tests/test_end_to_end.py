@@ -195,3 +195,16 @@ def test_review_skip_list_removes_images(env, monkeypatch, tmp_path):
     items = [c[1].rsplit("/", 1)[1] for c in FakeIG.instances[0].calls if c[0] == "item"]
     assert items == ["02_shot.jpg", "03_shot.jpg", "12_shot.jpg"]
     assert "removed by review" in notes[-1]
+
+
+def test_auto_mode_outside_slot_does_nothing(env, monkeypatch):
+    from datetime import datetime, timezone
+    from autopost import schedule
+
+    # 10:00 New York is not a posting slot
+    assert schedule.slot_for(datetime(2026, 10, 21, 14, 0, tzinfo=timezone.utc),
+                             publish.CONFIG["slots"], publish.CONFIG["timezone"]) is None
+    # 13:05 New York (EDT) is slot 1
+    assert schedule.slot_for(datetime(2026, 10, 21, 17, 5, tzinfo=timezone.utc),
+                             publish.CONFIG["slots"], publish.CONFIG["timezone"]) == (
+        datetime(2026, 10, 21).date(), 1)
