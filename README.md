@@ -16,7 +16,7 @@ Laikas skaičiuojamas pagal Niujorką, todėl laikrodžių sukiojimas (LT spalio
 3. Paima nuotraukas eilės tvarka (01, 02, 03 … 13), konvertuoja į JPG (Instagram nepriima PNG).
 4. Iš `instagram_caption*.pdf` ištraukia aprašymą (jei yra `_updated`, ima jį).
 5. Publikuoja kaip karuselę (iki 20 nuotraukų).
-6. Atsiunčia į Telegram: nuorodą į postą + **kurią dainą pridėti** iš tavo Saved.
+6. Atsiunčia į Discord: nuorodą į postą + **kurią dainą pridėti** iš tavo Saved.
 
 Muziką prie karuselės Instagram leidžia pridėti tik programėlėje: postas → ⋯ → **Edit** → **Add music**. Apie 15 sekundžių.
 
