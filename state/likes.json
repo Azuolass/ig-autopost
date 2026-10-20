@@ -1,0 +1,58 @@
+{
+  "notified": {
+    "18105345071357958": {
+      "likes": 885,
+      "baseline": true
+    },
+    "17940895782362970": {
+      "likes": 723,
+      "baseline": true
+    },
+    "17898815181392227": {
+      "likes": 724,
+      "baseline": true
+    },
+    "18033865904911055": {
+      "likes": 1322,
+      "baseline": true
+    },
+    "17913780024284473": {
+      "likes": 1082,
+      "baseline": true
+    },
+    "17930908782420286": {
+      "likes": 7036,
+      "baseline": true
+    },
+    "18056615846802717": {
+      "likes": 1907,
+      "baseline": true
+    },
+    "18451808431135708": {
+      "likes": 1249,
+      "baseline": true
+    },
+    "18114994859113414": {
+      "likes": 640,
+      "baseline": true
+    },
+    "17919953118243997": {
+      "likes": 3248,
+      "baseline": true
+    },
+    "18033536912672951": {
+      "likes": 1954,
+      "baseline": true
+    },
+    "18022635932926851": {
+      "likes": 801,
+      "baseline": true
+    },
+    "18501813316102071": {
+      "likes": 1264,
+      "baseline": true
+    }
+  },
+  "warned_missing": false,
+  "initialized": true
+}
