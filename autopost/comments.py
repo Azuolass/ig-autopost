@@ -140,7 +140,7 @@ def main(argv=None) -> int:
 
     now = datetime.now(timezone.utc)
     max_age = timedelta(days=cfg.get("max_comment_age_days", 7))
-    media = ig._call("GET", f"{ig.user_id}/media", fields="id,caption,permalink,timestamp",
+    media = ig._call("GET", f"{ig.user_id}/media", fields="id,caption,permalink,timestamp,comments_count",
                      limit=cfg.get("watch_posts", 15)).get("data", [])
 
     state = load_state()
@@ -161,7 +161,8 @@ def main(argv=None) -> int:
             print(f"cannot read comments of {m['id']}: {e}")
             alerts.append(f"• Nepavyko perskaityti komentarų: {e}")
             continue
-        print(f"post {m.get('timestamp', '')[:10]} {m.get('permalink', '')}: {len(comments)} comments")
+        print(f"post {m.get('timestamp', '')[:10]} {m.get('permalink', '')}: "
+              f"{len(comments)} comments readable, comments_count={m.get('comments_count')}")
         for c in comments:
             cid = c["id"]
             if cid in state["seen"]:
