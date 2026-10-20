@@ -82,11 +82,11 @@ def main() -> int:
     print("== Token auto-refresh (GH_PAT) ==")
     if os.environ.get("GH_PAT") and os.environ.get("GITHUB_REPOSITORY"):
         import subprocess
-        from datetime import datetime, timezone
+        import time as _time
 
         r = subprocess.run(
             ["gh", "secret", "set", "AUTOPOST_PAT_CHECK", "--repo", os.environ["GITHUB_REPOSITORY"]],
-            input=datetime.now(timezone.utc).isoformat().encode(), capture_output=True,
+            input=str(int(_time.time())).encode(), capture_output=True,
             env={**os.environ, "GH_TOKEN": os.environ["GH_PAT"]},
         )
         if r.returncode == 0:
