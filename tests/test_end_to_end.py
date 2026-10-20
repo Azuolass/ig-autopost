@@ -57,12 +57,16 @@ class FakeIG:
 
     def __init__(self, token, user_id, base, reject_ratio=False):
         self.calls = []
+        self.user_id = user_id
         self.reject_ratio = FakeIG.reject_ratio_next
         self.published = []
         FakeIG.instances.append(self)
 
     reject_ratio_next = False
     existing = []
+
+    def me(self):
+        return {"user_id": 42, "username": "test"}
 
     def recent_media(self, n):
         return FakeIG.existing
@@ -161,3 +165,10 @@ def test_missing_day_folder_notifies_and_fails(env):
         publish.main(["--date", "2026-10-29", "--slot", "1", "--preview-dir", str(tmp)])
     assert "could not read" in notes[-1]
 
+
+
+def test_user_id_read_from_token_when_secret_missing(env, monkeypatch):
+    tmp, hosted, notes = env
+    monkeypatch.delenv("IG_USER_ID")
+    assert publish.main(["--date", "2026-10-21", "--slot", "3", "--preview-dir", str(tmp)]) == 0
+    assert FakeIG.instances[0].user_id == "42"
