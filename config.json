@@ -11,5 +11,8 @@
   "jpeg_quality": 92,
   "fallback_aspect": "4:5",
   "graph_api_base": "https://graph.instagram.com/v23.0",
-  "media_branch": "media"
+  "media_branch": "media",
+  "likes_threshold": 500,
+  "likes_watch_posts": 25,
+  "likes_watch_days": 30
 }
