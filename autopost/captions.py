@@ -48,8 +48,9 @@ def _is_header(line: str, title: str | None) -> bool:
 def clean_caption(raw: str, title: str | None = None) -> str:
     """raw: one line per PDF line, a blank line where the PDF has a paragraph gap.
 
-    Lines inside a paragraph are joined with spaces; paragraphs are separated by
-    an empty line, the way the account's captions are written. A block that
+    Inside a paragraph, wrapped lines are joined with spaces and lines that end
+    a sentence keep their line break; paragraphs are separated by an empty
+    line, the way the account's captions are written. A block that
     does not end a sentence is treated as wrapped and joined with the next one.
     """
     blocks: list[list[str]] = [[]]
@@ -67,7 +68,11 @@ def clean_caption(raw: str, title: str | None = None) -> str:
     for block in blocks:
         if not block:
             continue
-        text = " ".join(block)
+        # inside a paragraph: a line that ends a sentence keeps its line break,
+        # a line cut mid-sentence (the PDF wrapped it) is joined with a space
+        text = block[0]
+        for ln in block[1:]:
+            text += ("\n" if _SENTENCE_END.search(text) else " ") + ln
         buf = f"{buf} {text}" if buf else text
         if _SENTENCE_END.search(buf):
             paragraphs.append(buf)

@@ -135,8 +135,24 @@ def test_caption_pdf_multi_sentence_lines_in_one_paragraph_stay_together(tmp_pat
     ])
     assert captions.clean_caption(captions.pdf_to_text(data), "Make Money Trading") == (
         "give your ambition a place on the wall.\n\n"
-        "the chart moves. the discipline stays.\n\n"
+        "the chart moves.\nthe discipline stays.\n\n"
         'shop now. "Make Money Trading". link in bio.'
+    )
+
+
+def test_caption_tyson_layout_keeps_line_break_inside_paragraph(tmp_path):
+    data = _layout_pdf(tmp_path / "t.pdf", [
+        (780, 9, "SUCCESS HUNTERS / 20.10.2026 / POST 3"),
+        (745, 16, "Lock In Mike Tyson"),
+        (700, 11, "focus looks quiet."),
+        (684, 11, "the work tells the rest."),
+        (653, 11, "let your room hold the standard."),
+        (622, 11, 'shop now. "Lock In Mike Tyson". link in bio.'),
+    ])
+    assert captions.clean_caption(captions.pdf_to_text(data), "Lock In Mike Tyson") == (
+        "focus looks quiet.\nthe work tells the rest.\n\n"
+        "let your room hold the standard.\n\n"
+        'shop now. "Lock In Mike Tyson". link in bio.'
     )
 
 
