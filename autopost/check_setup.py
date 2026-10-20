@@ -9,7 +9,7 @@ import os
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from . import drive
+from . import captions, drive
 from .instagram import Instagram
 
 CONFIG = json.loads((__import__("pathlib").Path(__file__).resolve().parent.parent / "config.json").read_text())
@@ -63,6 +63,16 @@ def main() -> int:
                     continue
                 a = drive.pick_assets(pf, d.list_children(pf.id), CONFIG["max_carousel_items"])
                 print(f"  ✓ {day} {CONFIG['slots'][str(slot)]} NY: {a.title} ({len(a.images)} img, {a.caption_pdf.name})")
+                try:
+                    cap = captions.clean_caption(captions.pdf_to_text(d.download(a.caption_pdf.id)), a.title)
+                    lines = cap.split("\n")
+                    print(f"      first: {lines[0]}")
+                    print(f"      last:  {lines[-1]}")
+                    if not lines[-1].lower().startswith("shop now"):
+                        print("      ⚠ caption does not end with the shop now CTA")
+                except Exception as e:
+                    print(f"      ✗ caption: {e}")
+                    ok = False
                 for w in a.warnings + warns:
                     print(f"      ⚠ {w}")
     except Exception as e:
