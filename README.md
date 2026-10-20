@@ -52,10 +52,10 @@ Paskyra turi būti **Creator** arba **Business** (tavo yra Creator ✓). Faceboo
 
 App lieka „Development" režime. Savo paskyrai publikuoti to pakanka, Meta peržiūros nereikia.
 
-### 4. Telegram pranešimai (rekomenduojama)
-1. Telegram'e parašyk **@BotFather** → `/newbot` → gauni **bot token**.
-2. Parašyk savo naujam botui bet ką.
-3. Parašyk **@userinfobot** → jis atsakys tavo **chat id**.
+### 4. Discord pranešimai (rekomenduojama)
+1. Discord'e savo serveryje sukurk kanalą, pvz. `#instagram`.
+2. Kanalo ⚙️ **Edit Channel → Integrations → Webhooks → New Webhook** → **Copy Webhook URL**.
+3. Įdėk kaip secret `DISCORD_WEBHOOK_URL`.
 
 ### 5. Secrets GitHub'e
 Repo → **Settings → Secrets and variables → Actions → New repository secret**:
@@ -65,7 +65,7 @@ Repo → **Settings → Secrets and variables → Actions → New repository sec
 | `IG_ACCESS_TOKEN` | Instagram tokenas (3 žingsnis) |
 | `IG_USER_ID` | gausi 6 žingsnyje, kol kas praleisk |
 | `GOOGLE_API_KEY` **arba** `GOOGLE_SERVICE_ACCOUNT_JSON` | 2 žingsnis (JSON įklijuok visą) |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | 4 žingsnis |
+| `DISCORD_WEBHOOK_URL` | 4 žingsnis |
 | `GH_PAT` | kad tokenas atsinaujintų automatiškai: GitHub → Settings → Developer settings → Fine-grained tokens → tik šis repo → **Secrets: Read and write** |
 
 ### 6. Patikrinimas
@@ -98,6 +98,6 @@ Nuotaikos: `calm, focus, dark, epic, cinematic, spiritual, intense, aggressive, 
 Konkrečiam postui gali nurodyti dainą ranka `music/plan.json`: `{"2026-10-21#1": "Daina – Atlikėjas"}`.
 
 ## Techninė dalis
-- `autopost/publish.py` – pagrindinė eiga · `drive.py` – Drive · `captions.py` – PDF → aprašymas · `images.py` – JPG · `instagram.py` – Instagram API · `schedule.py` – laikas · `music.py` – dainos · `notify.py` – Telegram
+- `autopost/publish.py` – pagrindinė eiga · `drive.py` – Drive · `captions.py` – PDF → aprašymas · `images.py` – JPG · `instagram.py` – Instagram API · `schedule.py` – laikas · `music.py` – dainos · `notify.py` – Discord
 - Testai: `pip install -r requirements.txt && pytest`
 - Jei Instagram atmestų 3:4 formatą, sistema automatiškai bando dar kartą su 4:5 (prideda plonas šonines juostas, piešinio nekarpo).

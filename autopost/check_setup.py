@@ -69,6 +69,15 @@ def main() -> int:
         print(f"  ✗ {e}")
         ok = False
 
+    print("== Notifications ==")
+    if os.environ.get("DISCORD_WEBHOOK_URL") or os.environ.get("TELEGRAM_BOT_TOKEN"):
+        from .notify import notify
+
+        notify("🔔 Instagram autopilot: pranešimai veikia." + (" Viskas paruošta." if ok else " Dar kažką reikia sutvarkyti, žiūrėk GitHub log'ą."))
+        print("  ✓ test message sent: check Discord")
+    else:
+        print("  - DISCORD_WEBHOOK_URL not set (no phone notifications)")
+
     print("\nALL GOOD" if ok else "\nSOMETHING NEEDS FIXING (see ✗ above)")
     return 0 if ok else 1
 
