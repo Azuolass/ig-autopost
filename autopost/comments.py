@@ -159,7 +159,9 @@ def main(argv=None) -> int:
             ).get("data", [])
         except InstagramError as e:
             print(f"cannot read comments of {m['id']}: {e}")
+            alerts.append(f"• Nepavyko perskaityti komentarų: {e}")
             continue
+        print(f"post {m.get('timestamp', '')[:10]} {m.get('permalink', '')}: {len(comments)} comments")
         for c in comments:
             cid = c["id"]
             if cid in state["seen"]:
@@ -174,6 +176,8 @@ def main(argv=None) -> int:
             ts = c.get("timestamp")
             if ts and now - datetime.strptime(ts, "%Y-%m-%dT%H:%M:%S%z") > max_age:
                 record["action"] = "too old"
+                if args.dry_run:
+                    print(f"  (too old) @{c.get('username')}: {text[:80]}")
                 continue
             if any((r.get("username") or "").lower() == my_name for r in (c.get("replies") or {}).get("data", [])):
                 record["action"] = "already answered"
