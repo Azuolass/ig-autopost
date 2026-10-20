@@ -18,6 +18,9 @@ on:
     - cron: "25 1 * * *"
     - cron: "2 2 * * *"
     - cron: "25 2 * * *"
+  push:
+    branches: [main]
+    paths: ["trigger/publish.json"]
   workflow_dispatch:
     inputs:
       auto:
@@ -74,7 +77,11 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
+          if [ "${{ github.event_name }}" = "push" ]; then
+            ARGS=$(python -c "import json; t=json.load(open('trigger/publish.json')); print(f\"--date {t['date']} --slot {t['slot']}\" + (' --dry-run' if t.get('dry_run') else '') + (' --force' if t.get('force') else ''))")
+            echo "trigger: $ARGS"
+            python -m autopost.publish $ARGS
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
             python -m autopost.publish --cron "${{ github.event.schedule }}"
           elif [ "${{ inputs.auto }}" = "true" ]; then
             python -m autopost.publish --auto
@@ -92,7 +99,7 @@ jobs:
           git config user.name autopost
           git config user.email autopost@users.noreply.github.com
           git add state/published.json 2>/dev/null || true
-          git diff --cached --quiet || { git commit -m "published ${{ github.event.schedule || inputs.date || 'auto' }}"; git pull --rebase -q; git push; }
+          git diff --cached --quiet || { git commit -m "published ${{ github.event.schedule || inputs.date || 'trigger' }}"; git pull --rebase -q; git push; }
 
       - name: Upload preview
         if: always()
