@@ -130,6 +130,10 @@ def main(argv=None) -> int:
     ap.add_argument("--preview-dir", default="preview")
     args = ap.parse_args(argv)
 
+    if args.cron and not os.environ.get("IG_ACCESS_TOKEN"):
+        print("IG_ACCESS_TOKEN is not set yet: setup not finished, skipping scheduled run")
+        return 0
+
     target = resolve_target(args)
     if not target:
         print("this run does not fall on a posting slot; nothing to do")
