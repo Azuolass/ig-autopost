@@ -182,3 +182,16 @@ def test_validate_builds_carousel_but_never_publishes(env):
     assert ig.published == []
     assert not (tmp / "state.json").exists()
     assert "NEpublikuotas" in notes[-1]
+
+
+def test_review_skip_list_removes_images(env, monkeypatch, tmp_path):
+    tmp, hosted, notes = env
+    root = tmp_path / "root"
+    (root / "review").mkdir(parents=True)
+    (root / "review" / "skip.json").write_text('{"2026-10-21#3": ["01", "10"]}')
+    (root / "music").mkdir()
+    monkeypatch.setattr(publish, "ROOT", root)
+    assert publish.main(["--date", "2026-10-21", "--slot", "3", "--preview-dir", str(tmp)]) == 0
+    items = [c[1].rsplit("/", 1)[1] for c in FakeIG.instances[0].calls if c[0] == "item"]
+    assert items == ["02_shot.jpg", "03_shot.jpg", "12_shot.jpg"]
+    assert "removed by review" in notes[-1]

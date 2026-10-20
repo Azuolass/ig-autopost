@@ -270,3 +270,42 @@ def test_music_plan_overrides_and_recent_avoided():
 def test_music_empty_library():
     song, why = music.pick_song("k", "x", "", [], {}, [])
     assert song is None and "library.json" in why
+
+
+def _jpeg_markers(data: bytes) -> set[int]:
+    markers, i = set(), 2
+    while i < len(data) - 4 and data[i] == 0xFF:
+        m = data[i + 1]
+        if m == 0xDA:  # start of scan
+            break
+        markers.add(m)
+        i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
+    return markers
+
+
+def test_output_has_no_metadata():
+    from PIL import PngImagePlugin
+
+    meta = PngImagePlugin.PngInfo()
+    meta.add_text("XML:com.adobe.xmp", '<x:xmpmeta><rdf:Description DigitalSourceType="trainedAlgorithmicMedia"/></x:xmpmeta>')
+    meta.add_text("parameters", "prompt: canvas mockup, made with AI")
+    meta.add_text("Software", "SomeGenerator")
+    buf = io.BytesIO()
+    Image.new("RGB", (400, 533), (50, 60, 70)).save(buf, "PNG", pnginfo=meta)
+    out, _ = images.to_instagram_jpeg(buf.getvalue())
+    # only quantisation/huffman/frame/restart markers; no APPn (EXIF, XMP, ICC, IPTC, JUMBF/C2PA) or comments
+    assert not any(0xE1 <= m <= 0xEF for m in _jpeg_markers(out))
+    assert 0xFE not in _jpeg_markers(out)
+    for word in (b"xmp", b"trainedAlgorithmic", b"prompt", b"Generator", b"c2pa", b"jumb"):
+        assert word.lower() not in out.lower()
+
+
+def test_icc_profile_converted_not_kept():
+    from PIL import ImageCms
+
+    p3 = ImageCms.ImageCmsProfile(ImageCms.createProfile("sRGB")).tobytes()
+    buf = io.BytesIO()
+    Image.new("RGB", (100, 100), (200, 10, 10)).save(buf, "PNG", icc_profile=p3)
+    out, _ = images.to_instagram_jpeg(buf.getvalue())
+    assert 0xE2 not in _jpeg_markers(out)  # APP2 = ICC
+    assert Image.open(io.BytesIO(out)).getpixel((50, 50))[0] > 180

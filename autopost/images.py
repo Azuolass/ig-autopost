@@ -31,6 +31,18 @@ def to_instagram_jpeg(
 ) -> tuple[bytes, tuple[int, int]]:
     img = Image.open(io.BytesIO(data))
     img = ImageOps.exif_transpose(img)
+    icc = img.info.get("icc_profile")
+    if icc:  # convert to sRGB so colours stay right once the profile is dropped
+        try:
+            from PIL import ImageCms
+
+            src = ImageCms.ImageCmsProfile(io.BytesIO(icc))
+            dst = ImageCms.createProfile("sRGB")
+            if img.mode not in ("RGB", "RGBA"):
+                img = img.convert("RGBA" if "A" in img.getbands() else "RGB")
+            img = ImageCms.profileToProfile(img, src, dst, outputMode=img.mode)
+        except Exception:
+            pass
     if img.mode in ("RGBA", "LA", "P"):
         img = img.convert("RGBA")
         bg = Image.new("RGB", img.size, (255, 255, 255))
@@ -56,6 +68,10 @@ def to_instagram_jpeg(
             canvas.paste(img, (0, (new_h - h) // 2))
             img = canvas
 
+    # Rebuild from raw pixels: no EXIF, XMP, IPTC, ICC, C2PA or any other
+    # metadata from the source file survives into the upload.
+    clean = Image.frombytes("RGB", img.size, img.tobytes())
+    img = clean
     out = io.BytesIO()
     img.save(out, "JPEG", quality=quality, optimize=True, progressive=True)
     q = quality
