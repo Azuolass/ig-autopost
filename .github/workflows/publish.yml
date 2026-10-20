@@ -31,6 +31,10 @@ on:
         description: "Dry run (prepare and preview, do not publish)"
         type: boolean
         default: true
+      validate:
+        description: "Test on Instagram without publishing (build the post, do not publish)"
+        type: boolean
+        default: false
       force:
         description: "Publish even if already marked as published"
         type: boolean
@@ -71,6 +75,7 @@ jobs:
           else
             ARGS="--date ${{ inputs.date }} --slot ${{ inputs.slot }}"
             [ "${{ inputs.dry_run }}" = "true" ] && ARGS="$ARGS --dry-run"
+            [ "${{ inputs.validate }}" = "true" ] && ARGS="$ARGS --validate"
             [ "${{ inputs.force }}" = "true" ] && ARGS="$ARGS --force"
             python -m autopost.publish $ARGS
           fi

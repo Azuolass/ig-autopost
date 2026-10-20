@@ -172,3 +172,13 @@ def test_user_id_read_from_token_when_secret_missing(env, monkeypatch):
     monkeypatch.delenv("IG_USER_ID")
     assert publish.main(["--date", "2026-10-21", "--slot", "3", "--preview-dir", str(tmp)]) == 0
     assert FakeIG.instances[0].user_id == "42"
+
+
+def test_validate_builds_carousel_but_never_publishes(env):
+    tmp, hosted, notes = env
+    assert publish.main(["--date", "2026-10-21", "--slot", "3", "--validate", "--preview-dir", str(tmp)]) == 0
+    ig = FakeIG.instances[0]
+    assert any(c[0] == "carousel" for c in ig.calls)
+    assert ig.published == []
+    assert not (tmp / "state.json").exists()
+    assert "NEpublikuotas" in notes[-1]

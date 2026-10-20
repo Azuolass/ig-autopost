@@ -127,6 +127,8 @@ def main(argv=None) -> int:
     ap.add_argument("--slot")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="publish even if state says it is done")
+    ap.add_argument("--validate", action="store_true",
+                    help="upload to Instagram and build the carousel, but stop before publishing")
     ap.add_argument("--preview-dir", default="preview")
     args = ap.parse_args(argv)
 
@@ -141,7 +143,7 @@ def main(argv=None) -> int:
     day, slot = target
     key = post_key(day, slot)
     state = music.load_json(STATE_FILE, {})
-    if key in state and not args.force and not args.dry_run:
+    if key in state and not args.force and not args.dry_run and not args.validate:
         print(f"{key} already published: {state[key].get('permalink')}")
         return 0
 
@@ -182,7 +184,7 @@ def main(argv=None) -> int:
         ig.user_id = str(ig.me()["user_id"])
 
     # Safety net if a previous run published but could not save state.
-    for m in ig.recent_media(10):
+    for m in ([] if args.validate else ig.recent_media(10)):
         if (m.get("caption") or "").strip() == caption.strip():
             print(f"identical caption already on the account: {m.get('permalink')}; not posting again")
             state[key] = {"media_id": m["id"], "permalink": m.get("permalink"), "song": song, "recovered": True}
@@ -206,10 +208,16 @@ def main(argv=None) -> int:
             ig.wait_ready(c)
         carousel = ig.create_carousel(children, caption)
         ig.wait_ready(carousel)
+        if args.validate:
+            msg = (f"🧪 Testas OK: {assets.title} ({len(children)} nuotr.) pilnai paruoštas Instagram'e, "
+                   "bet NEpublikuotas. Juodraštis niekur nematomas ir išsitrins per 24 val.")
+            notify(msg)
+            return 0
         media_id = ig.publish(carousel)
         link = ig.permalink(media_id)
     except Exception as e:
-        notify(f"❌ Instagram {key} ({assets.title}) FAILED to publish.\n{e}")
+        what = "test (validate)" if args.validate else "publish"
+        notify(f"❌ Instagram {key} ({assets.title}) {what} FAILED.\n{e}")
         raise
 
     state[key] = {
