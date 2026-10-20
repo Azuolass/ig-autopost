@@ -66,8 +66,8 @@ def main() -> int:
                 try:
                     cap = captions.clean_caption(captions.pdf_to_text(d.download(a.caption_pdf.id)), a.title)
                     lines = cap.split("\n")
-                    print(f"      first: {lines[0]}")
-                    print(f"      last:  {lines[-1]}")
+                    for ln in lines:
+                        print(f"      | {ln}")
                     if not lines[-1].lower().startswith("shop now"):
                         print("      ⚠ caption does not end with the shop now CTA")
                 except Exception as e:

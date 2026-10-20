@@ -51,18 +51,18 @@ instagram caption
 
 def test_caption_layout_a():
     assert captions.clean_caption(PDF_A, "You Vs You Stephen Curry") == (
-        "your last version is the one to beat.\n"
-        "keep showing up for the reps. fix what needs fixing. give yourself something better to measure against tomorrow.\n"
-        "put the standard on your wall. this wall art belongs where you do the work.\n"
+        "your last version is the one to beat.\n\n"
+        "keep showing up for the reps. fix what needs fixing. give yourself something better to measure against tomorrow.\n\n"
+        "put the standard on your wall. this wall art belongs where you do the work.\n\n"
         'shop now. "You Vs You Stephen Curry". link in bio.'
     )
 
 
 def test_caption_layout_b():
     assert captions.clean_caption(PDF_B, "Lock In Mike Tyson") == (
-        "focus looks quiet.\n"
-        "the work tells the rest.\n"
-        "let your room hold the standard.\n"
+        "focus looks quiet.\n\n"
+        "the work tells the rest.\n\n"
+        "let your room hold the standard.\n\n"
         'shop now. "Lock In Mike Tyson". link in bio.'
     )
 
@@ -86,8 +86,58 @@ shop now. "911 & Blackbird". link in bio.
 instagram caption
 """
     out = captions.clean_caption(raw, "911 And Blackbird")
-    assert out.startswith("some machines make you look twice.\n")
+    assert out.startswith("some machines make you look twice.\n\n")
     assert out.endswith('shop now. "911 & Blackbird". link in bio.')
+
+
+def _layout_pdf(path, rows):
+    """rows: (y, size, text) like the real caption documents."""
+    from reportlab.pdfgen import canvas
+
+    c = canvas.Canvas(str(path))
+    for y, size, text in rows:
+        c.setFont("Helvetica", size)
+        c.drawString(90, y, text)
+    c.save()
+    return path.read_bytes()
+
+
+def test_caption_pdf_layout_keeps_paragraphs_exactly(tmp_path):
+    # Same layout as the real "Fear Of God" PDF: 16pt line steps inside a
+    # paragraph, ~31pt between paragraphs. Expected text = the live post.
+    data = _layout_pdf(tmp_path / "fear.pdf", [
+        (770, 18, "20 October 2026 Post 1"),
+        (735, 11, "Fear Of God"),
+        (719, 11, "Instagram caption"),
+        (688, 11, "faith stays when the noise gets loud."),
+        (657, 11, "stay grounded in what you believe. keep your discipline when the room is empty"),
+        (641, 11, "and the work gets heavy."),
+        (610, 11, "wall art for the space where you come back to your purpose."),
+        (579, 11, 'shop now. "Fear Of God". link in bio.'),
+    ])
+    assert captions.clean_caption(captions.pdf_to_text(data), "Fear Of God") == (
+        "faith stays when the noise gets loud.\n\n"
+        "stay grounded in what you believe. keep your discipline when the room is empty and the work gets heavy.\n\n"
+        "wall art for the space where you come back to your purpose.\n\n"
+        'shop now. "Fear Of God". link in bio.'
+    )
+
+
+def test_caption_pdf_multi_sentence_lines_in_one_paragraph_stay_together(tmp_path):
+    data = _layout_pdf(tmp_path / "x.pdf", [
+        (770, 11, "SUCCESS HUNTERS / 21.10.2026 / POST 2"),
+        (740, 11, "Make Money Trading"),
+        (709, 11, "give your ambition a place on the wall."),
+        (678, 11, "the chart moves."),
+        (662, 11, "the discipline stays."),
+        (631, 11, 'shop now. "Make Money Trading". link in bio.'),
+        (600, 11, "instagram caption"),
+    ])
+    assert captions.clean_caption(captions.pdf_to_text(data), "Make Money Trading") == (
+        "give your ambition a place on the wall.\n\n"
+        "the chart moves. the discipline stays.\n\n"
+        'shop now. "Make Money Trading". link in bio.'
+    )
 
 
 def test_caption_empty_raises():
