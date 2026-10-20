@@ -177,7 +177,9 @@ def main(argv=None) -> int:
         print(f"\nDRY RUN: nothing published. Preview in {work}")
         return 0
 
-    ig = Instagram(os.environ["IG_ACCESS_TOKEN"], os.environ["IG_USER_ID"], CONFIG["graph_api_base"])
+    ig = Instagram(os.environ["IG_ACCESS_TOKEN"], os.environ.get("IG_USER_ID") or "me", CONFIG["graph_api_base"])
+    if ig.user_id == "me":
+        ig.user_id = str(ig.me()["user_id"])
 
     # Safety net if a previous run published but could not save state.
     for m in ig.recent_media(10):
