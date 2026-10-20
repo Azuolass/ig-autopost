@@ -97,6 +97,25 @@ class Drive:
         return r.content
 
 
+def root_folder_id() -> str:
+    fid = os.environ.get("DRIVE_ROOT_FOLDER_ID")
+    if not fid:
+        raise RuntimeError("DRIVE_ROOT_FOLDER_ID secret is not set")
+    return fid.strip()
+
+
+def publicly_readable(folder_id: str, api_key: str) -> bool:
+    """True if the folder can be listed with only an API key, i.e. it is shared 'anyone with the link'."""
+    r = requests.get(
+        f"{API}/files",
+        params={"q": f"'{folder_id}' in parents and trashed = false", "key": api_key,
+                "fields": "files(id)", "pageSize": "1", "supportsAllDrives": "true",
+                "includeItemsFromAllDrives": "true"},
+        timeout=30,
+    )
+    return r.status_code == 200 and bool(r.json().get("files"))
+
+
 # ---- pure helpers (unit-tested) -------------------------------------------
 
 def find_month_folder(children: list[DriveFile], day: date) -> DriveFile | None:

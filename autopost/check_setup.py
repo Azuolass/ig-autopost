@@ -42,7 +42,9 @@ def main() -> int:
     try:
         d = drive.Drive()
         today = datetime.now(ZoneInfo(CONFIG["timezone"])).date()
-        root = d.list_children(CONFIG["drive_root_folder_id"])
+        how = "service account" if os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON") else "API key (public link)"
+        print(f"  access via {how}")
+        root = d.list_children(drive.root_folder_id())
         for offset in range(0, 3):
             day = today + timedelta(days=offset)
             month = drive.find_month_folder(root, day)
@@ -78,6 +80,18 @@ def main() -> int:
     except Exception as e:
         print(f"  ✗ {e}")
         ok = False
+
+    print("== Drive privacy ==")
+    if os.environ.get("GOOGLE_API_KEY") and os.environ.get("DRIVE_ROOT_FOLDER_ID"):
+        try:
+            if drive.publicly_readable(drive.root_folder_id(), os.environ["GOOGLE_API_KEY"]):
+                print("  ⚠ the Instagram folder is still shared 'anyone with the link' (public)")
+            else:
+                print("  ✓ the Instagram folder is private")
+        except Exception as e:
+            print(f"  - could not test: {e}")
+    else:
+        print("  - not tested")
 
     print("== Token auto-refresh (GH_PAT) ==")
     if os.environ.get("GH_PAT") and os.environ.get("GITHUB_REPOSITORY"):
