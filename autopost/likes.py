@@ -89,6 +89,14 @@ def main() -> int:
         "GET", f"{ig.user_id}/media", fields="id,caption,like_count,timestamp,permalink",
         limit=CONFIG.get("likes_watch_posts", 25),
     ).get("data", [])
+    # The /media edge may hide like_count when the owner hides likes; a direct
+    # query on each post by its owner returns the real number.
+    for m in media:
+        if m.get("like_count") is None or m.get("like_count") == 0:
+            try:
+                m["like_count"] = ig._call("GET", m["id"], fields="like_count").get("like_count")
+            except Exception as e:
+                print(f"could not read likes of {m['id']}: {e}")
     state = load_state()
     if not state.get("initialized"):
         # first run: posts already over the threshold are remembered silently
