@@ -1,6 +1,6 @@
 {
   "date": "2026-10-20",
   "slot": 3,
-  "dry_run": true,
-  "note": "test: does a push trigger the workflow"
+  "force": true,
+  "note": "postponed Tyson post, 06:00 LT"
 }
