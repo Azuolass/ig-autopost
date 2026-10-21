@@ -88,7 +88,22 @@ def main(argv=None) -> int:
             review.mkdir(parents=True, exist_ok=True)
 
             skip = {str(s).zfill(2) for s in skip_all.get(key, [])}
-            originals = [(f.name, d.download(f.id)) for f in a.images]
+            originals, broken = [], []
+            for f in a.images:
+                data = None
+                for _ in range(3):  # Drive downloads occasionally arrive cut short
+                    try:
+                        data = d.download(f.id)
+                        Image.open(io.BytesIO(data)).convert("RGB")
+                        break
+                    except Exception:
+                        data = None
+                if data is None:
+                    broken.append(f.name)
+                else:
+                    originals.append((f.name, data))
+            if broken:
+                a.warnings.append(f"BROKEN FILES in Drive (cannot be opened, left out): {broken}")
 
             # review sheets: two images per sheet, labelled by file name
             thumbs = [(n, thumb(b, 900)) for n, b in originals]
