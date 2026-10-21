@@ -208,3 +208,10 @@ def test_auto_mode_outside_slot_does_nothing(env, monkeypatch):
     assert schedule.slot_for(datetime(2026, 10, 21, 17, 5, tzinfo=timezone.utc),
                              publish.CONFIG["slots"], publish.CONFIG["timezone"]) == (
         datetime(2026, 10, 21).date(), 1)
+
+
+def test_paused_scheduled_run_publishes_nothing(env, monkeypatch):
+    monkeypatch.setattr(publish, "CONFIG", {**publish.CONFIG, "publishing_paused": True})
+    assert publish.main(["--cron", "2 17 * * *"]) == 0
+    assert publish.main(["--auto"]) == 0
+    assert not FakeIG.instances

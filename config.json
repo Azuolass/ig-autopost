@@ -21,5 +21,6 @@
     "max_comment_age_days": 7,
     "max_replies_per_run": 20,
     "seconds_between_replies": 4
-  }
+  },
+  "publishing_paused": true
 }

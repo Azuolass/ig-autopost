@@ -144,6 +144,10 @@ def main(argv=None) -> int:
     ap.add_argument("--preview-dir", default="preview")
     args = ap.parse_args(argv)
 
+    if (args.cron or args.auto) and CONFIG.get("publishing_paused"):
+        print("publishing is paused (config.json: publishing_paused); scheduled run does nothing")
+        return 0
+
     if (args.cron or args.auto) and not os.environ.get("IG_ACCESS_TOKEN"):
         print("IG_ACCESS_TOKEN is not set yet: setup not finished, skipping scheduled run")
         return 0
