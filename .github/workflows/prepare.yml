@@ -1,0 +1,41 @@
+name: Prepare posts (review sheets + upload-ready files)
+
+on:
+  push:
+    branches: [main]
+    paths: ["trigger/prepare.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Build
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          DRIVE_ROOT_FOLDER_ID: ${{ secrets.DRIVE_ROOT_FOLDER_ID }}
+        run: |
+          FROM=$(python -c "import json; print(json.load(open('trigger/prepare.json'))['from'])")
+          TO=$(python -c "import json; print(json.load(open('trigger/prepare.json'))['to'])")
+          python -m autopost.prepare --from "$FROM" --to "$TO" --out out
+      - name: Publish to the 'prepared' branch
+        run: |
+          cd out
+          git init -q
+          git checkout -q --orphan prepared
+          git config user.name autopost
+          git config user.email autopost@users.noreply.github.com
+          git add .
+          git commit -qm "prepared $(date -u +%FT%TZ)"
+          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" prepared:prepared

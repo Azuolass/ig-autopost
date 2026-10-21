@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import os
 import re
+from pathlib import Path
 from dataclasses import dataclass, field
 from datetime import date
 
@@ -95,6 +96,17 @@ class Drive:
         )
         r.raise_for_status()
         return r.content
+
+
+def root_folder_id() -> str:
+    """DRIVE_ROOT_FOLDER_ID secret, falling back to config.json while that still holds it."""
+    fid = os.environ.get("DRIVE_ROOT_FOLDER_ID")
+    if fid:
+        return fid.strip()
+    cfg = json.loads((Path(__file__).resolve().parent.parent / "config.json").read_text())
+    if cfg.get("drive_root_folder_id"):
+        return cfg["drive_root_folder_id"]
+    raise RuntimeError("DRIVE_ROOT_FOLDER_ID secret is not set")
 
 
 # ---- pure helpers (unit-tested) -------------------------------------------
