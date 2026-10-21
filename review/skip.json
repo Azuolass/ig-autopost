@@ -1,4 +1,10 @@
 {
   "_comment": "Images to leave out of a post, by number. Key = NY date#slot.",
-  "2026-10-20#3": ["01", "07"]
+  "2026-10-20#3": [
+    "01",
+    "07"
+  ],
+  "2026-10-26#2": [
+    "06"
+  ]
 }
