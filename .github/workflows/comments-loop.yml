@@ -1,0 +1,50 @@
+name: Comments loop (every 5 min, self-restarting)
+
+# GitHub's cron is often hours late, so this job stays up for ~5.5 hours,
+# checks comments every 5 minutes, then starts its own next run.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"   # backup restart if the chain ever breaks
+
+concurrency:
+  group: comments-loop
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Check comments every 5 minutes
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          git config user.name autopost
+          git config user.email autopost@users.noreply.github.com
+          end=$(( $(date +%s) + 330*60 ))
+          while [ "$(date +%s)" -lt "$end" ]; do
+            git pull --rebase -q || true
+            python -m autopost.comments || echo "comments run failed"
+            git add state/comments.json 2>/dev/null || true
+            git diff --cached --quiet || { git commit -qm "comments check"; git pull --rebase -q; git push -q || true; }
+            sleep 300
+          done
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run comments-loop.yml --ref main -R ${{ github.repository }}

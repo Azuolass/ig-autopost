@@ -2,7 +2,7 @@ name: Reply to comments
 
 on:
   schedule:
-    - cron: "7,22,37,52 * * * *"   # every 15 minutes
+    - cron: "7 3 1 1 *"   # replaced by comments-loop.yml; kept for manual dry runs
   workflow_dispatch:
     inputs:
       dry_run:
