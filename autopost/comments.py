@@ -161,10 +161,19 @@ def main(argv=None) -> int:
 
     for m in media:
         try:
-            comments = ig._call(
-                "GET", f"{m['id']}/comments",
-                fields="id,text,username,timestamp,replies{username}", limit=50,
-            ).get("data", [])
+            try:
+                comments = ig._call(
+                    "GET", f"{m['id']}/comments",
+                    fields="id,text,username,from{id,username},timestamp,replies{username,from{id,username}}",
+                    limit=50,
+                ).get("data", [])
+            except InstagramError:
+                comments = ig._call(
+                    "GET", f"{m['id']}/comments",
+                    fields="id,text,username,timestamp,replies{username}", limit=50,
+                ).get("data", [])
+            for c in comments:
+                c["username"] = c.get("username") or (c.get("from") or {}).get("username")
         except InstagramError as e:
             out(f"cannot read comments of {m['id']}: {e}")
             alerts.append(f"• Nepavyko perskaityti komentarų: {e}")
@@ -178,6 +187,8 @@ def main(argv=None) -> int:
             record = {"ts": c.get("timestamp", now.isoformat())}
             state["seen"][cid] = record
             user = (c.get("username") or "").lower()
+            if (c.get("from") or {}).get("id") == ig.user_id:
+                user = my_name
             text = c.get("text") or ""
             if first_run or user == my_name:
                 record["action"] = "baseline" if first_run else "own"
@@ -188,7 +199,9 @@ def main(argv=None) -> int:
                 if args.dry_run:
                     out(f"  (too old) @{c.get('username')}: {text[:80]}")
                 continue
-            if any((r.get("username") or "").lower() == my_name for r in (c.get("replies") or {}).get("data", [])):
+            if any((r.get("username") or (r.get("from") or {}).get("username") or "").lower() == my_name
+                   or (r.get("from") or {}).get("id") == ig.user_id
+                   for r in (c.get("replies") or {}).get("data", [])):
                 record["action"] = "already answered"
                 continue
 

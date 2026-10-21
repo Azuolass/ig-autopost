@@ -211,7 +211,10 @@
         "(need|want) (this|one|it|that)",
         "\\bavailable\\b",
         "how (do|can) i (get|order)",
-        "\\bsell\\b"
+        "\\bsell\\b",
+        "where (to|do i|can i|should i) go",
+        "\\baccess to (these|this|them|it)\\b",
+        "where (are|is) (these|this|they|it) (sold|from)"
       ],
       "reply": "You can find our artwork at successhuntersprints.com.\n\nFind your piece. Own your space."
     },
