@@ -1,4 +1,4 @@
-name: Comments loop (every 5 min, self-restarting)
+name: Always-on loop (post queue every minute, comments every 5 min)
 
 # GitHub's cron is often hours late, so this job stays up for ~5.5 hours,
 # checks comments every 5 minutes, then starts its own next run.
@@ -24,24 +24,33 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - run: pip install requests
-      - name: Check comments every 5 minutes
+      - run: pip install -r requirements.txt
+      - name: Post queue every minute, comments every 5 minutes
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          DRIVE_ROOT_FOLDER_ID: ${{ secrets.DRIVE_ROOT_FOLDER_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name autopost
           git config user.email autopost@users.noreply.github.com
           end=$(( $(date +%s) + 330*60 ))
+          i=0
           while [ "$(date +%s)" -lt "$end" ]; do
             git pull --rebase -q || true
-            python -m autopost.comments || echo "comments run failed"
-            git add state/comments.json 2>/dev/null || true
-            git diff --cached --quiet || { git commit -qm "comments check"; git pull --rebase -q; git push -q || true; }
-            sleep 300
+            python -m autopost.queue || echo "queue run failed"
+            if [ $((i % 5)) -eq 0 ]; then
+              python -m autopost.comments || echo "comments run failed"
+            fi
+            git add state/ trigger/queue.json 2>/dev/null || true
+            git diff --cached --quiet || { git commit -qm "loop: state update"; git pull --rebase -q; git push -q || true; }
+            i=$((i + 1))
+            sleep 60
           done
       - name: Start the next run
         if: always()
