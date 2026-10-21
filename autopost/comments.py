@@ -51,6 +51,12 @@ class Matcher:
         self.praise = _compile(praise.get("triggers", []))
         self.praise_replies = praise.get("replies", [])
         self.spam = _compile(data.get("spam", []))
+        emoji = data.get("emoji_only", {})
+        self.emoji_replies = emoji.get("replies", []) if emoji.get("enabled", False) else []
+
+    def is_emoji_only(self, text: str) -> bool:
+        t = text.strip()
+        return bool(self.emoji_replies) and bool(t) and not re.search(r"\w", t)
 
     def is_spam(self, text: str) -> bool:
         return any(p.search(text) for p in self.spam)
@@ -90,6 +96,8 @@ def decide(text: str, matcher: Matcher, rng: random.Random) -> tuple[str | None,
     """Return (reply or None, template ids, alert, reason)."""
     if matcher.is_spam(text):
         return None, [], False, "spam"
+    if matcher.is_emoji_only(text):
+        return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
     hits = matcher.templates_for(text)
     if hits:
         return combine(hits), [t["id"] for t in hits], any(t.get("alert") for t in hits), "template"
@@ -208,7 +216,8 @@ def main(argv=None) -> int:
             reply, ids, alert, reason = decide(text, matcher, rng)
             record.update({"action": reason, "templates": ids})
             if reply and budget > 0:
-                message = f"@{c.get('username')} {reply}" if c.get("username") else reply
+                message = f"@{c.get('username')} {reply}" if c.get("username") and reason != "emoji" else reply
+                message = message.lower()  # house style: no capitals
                 if args.dry_run:
                     out(f"\n[{reason}: {', '.join(ids)}] @{c.get('username')}: {text}\n--> {message}")
                 else:

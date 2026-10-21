@@ -283,5 +283,21 @@
     "followers",
     "ambassador",
     "\\bfeature\\b"
-  ]
+  ],
+  "emoji_only": {
+    "enabled": true,
+    "_comment": "comment made only of emoji -> reply with one of these, no @mention",
+    "replies": [
+      "🤔",
+      "🫡",
+      "🧨",
+      "🚀",
+      "🥷",
+      "📈",
+      "🤫",
+      "👀",
+      "🔥",
+      "💣"
+    ]
+  }
 }
