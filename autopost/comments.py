@@ -119,6 +119,14 @@ def save_state(state: dict) -> None:
 
 # ---- main -------------------------------------------------------------------------
 
+REPORT: list[str] = []
+
+
+def out(line: str = "") -> None:
+    print(line)
+    REPORT.append(line)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
@@ -158,10 +166,10 @@ def main(argv=None) -> int:
                 fields="id,text,username,timestamp,replies{username}", limit=50,
             ).get("data", [])
         except InstagramError as e:
-            print(f"cannot read comments of {m['id']}: {e}")
+            out(f"cannot read comments of {m['id']}: {e}")
             alerts.append(f"• Nepavyko perskaityti komentarų: {e}")
             continue
-        print(f"post {m.get('timestamp', '')[:10]} {m.get('permalink', '')}: "
+        out(f"post {m.get('timestamp', '')[:10]} {m.get('permalink', '')}: "
               f"{len(comments)} comments readable, comments_count={m.get('comments_count')}")
         for c in comments:
             cid = c["id"]
@@ -178,7 +186,7 @@ def main(argv=None) -> int:
             if ts and now - datetime.strptime(ts, "%Y-%m-%dT%H:%M:%S%z") > max_age:
                 record["action"] = "too old"
                 if args.dry_run:
-                    print(f"  (too old) @{c.get('username')}: {text[:80]}")
+                    out(f"  (too old) @{c.get('username')}: {text[:80]}")
                 continue
             if any((r.get("username") or "").lower() == my_name for r in (c.get("replies") or {}).get("data", [])):
                 record["action"] = "already answered"
@@ -189,7 +197,7 @@ def main(argv=None) -> int:
             if reply and budget > 0:
                 message = f"@{c.get('username')} {reply}" if c.get("username") else reply
                 if args.dry_run:
-                    print(f"\n[{reason}: {', '.join(ids)}] @{c.get('username')}: {text}\n--> {message}")
+                    out(f"\n[{reason}: {', '.join(ids)}] @{c.get('username')}: {text}\n--> {message}")
                 else:
                     try:
                         ig._call("POST", f"{cid}/replies", message=message)
@@ -203,21 +211,25 @@ def main(argv=None) -> int:
                 record["action"] = "deferred (reply budget used)"
                 del state["seen"][cid]  # try again next run
             elif args.dry_run:
-                print(f"\n[{reason}] @{c.get('username')}: {text}\n--> (no reply)")
+                out(f"\n[{reason}] @{c.get('username')}: {text}\n--> (no reply)")
             if alert:
                 what = "atsakyta šablonu, bet reikia žmogaus DM'e" if reply else "neatsakytas klausimas"
                 alerts.append(f"• @{c.get('username')}: „{text[:200]}\"\n  ({what}) {m.get('permalink', '')}")
 
     if first_run:
         state["initialized"] = True
-        print(f"first run: recorded {len(state['seen'])} existing comments, no replies sent")
+        out(f"first run: recorded {len(state['seen'])} existing comments, no replies sent")
     if alerts and not args.dry_run:
         notify("💬 Komentarai, kuriems reikia žmogaus:\n" + "\n".join(alerts[:15]))
     elif alerts:
-        print("\nWOULD ALERT:\n" + "\n".join(alerts))
+        out("\nWOULD ALERT:\n" + "\n".join(alerts))
     if not args.dry_run:
         save_state(state)
     print(f"\nreplied: {replied}")
+    if args.dry_run:
+        report = "\n".join(REPORT)
+        (ROOT / "state" / "comments_dryrun.txt").write_text(report + "\n", encoding="utf-8")
+        notify("🧪 Komentarų bandymas (niekas neparašyta Instagram'e):\n" + report[-1800:])
     return 0
 
 
