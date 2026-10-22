@@ -10,6 +10,7 @@ converts them, cleans the caption, picks the song and writes a preview.
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import os
 import shutil
@@ -113,7 +114,22 @@ def fetch_post(day: date, slot: int):
             raise RuntimeError("fewer than 2 images left after review removals")
     raw = captions.pdf_to_text(d.download(assets.caption_pdf.id))
     caption = captions.clean_caption(raw, assets.title)
-    originals = [(f.name, d.download(f.id)) for f in assets.images]
+    originals = []
+    for f in assets.images:
+        data = None
+        for _ in range(3):  # Drive downloads occasionally arrive cut short
+            try:
+                data = d.download(f.id)
+                images.Image.open(io.BytesIO(data)).convert("RGB")
+                break
+            except Exception:
+                data = None
+        if data is None:
+            assets.warnings.append(f"BROKEN FILE in Drive, left out: {f.name}")
+        else:
+            originals.append((f.name, data))
+    if len(originals) < 2:
+        raise RuntimeError("fewer than 2 readable images")
     return assets, caption, originals
 
 
