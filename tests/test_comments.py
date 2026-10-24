@@ -41,7 +41,7 @@ def test_template_matching(text, expected):
 def test_praise_and_noise():
     assert ids("🔥🔥🔥") == ["emoji"]
     assert ids("this goes hard") == ["praise"]
-    assert decide("ok", M, RNG)[0] is None
+    assert decide("ok", M, RNG)[3] == "emoji"
     reply, _, alert, reason = decide("who is the guy in the picture?", M, RNG)
     assert reply is None and alert and reason == "unanswered question"
 

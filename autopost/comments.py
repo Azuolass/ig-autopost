@@ -105,6 +105,8 @@ def decide(text: str, matcher: Matcher, rng: random.Random) -> tuple[str | None,
         return rng.choice(matcher.praise_replies), ["praise"], False, "praise"
     if "?" in text:
         return None, [], True, "unanswered question"
+    if matcher.emoji_replies:  # anything else gets one of our emoji
+        return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
     return None, [], False, "no match"
 
 
