@@ -92,7 +92,7 @@ def resolve_target(args) -> tuple[date, int] | None:
 def fetch_post(day: date, slot: int):
     d = drive.Drive()
     warnings: list[str] = []
-    month = drive.find_month_folder(d.list_children(CONFIG["drive_root_folder_id"]), day)
+    month = drive.find_month_folder(d.list_children(drive.root_folder_id()), day)
     if not month:
         raise RuntimeError(f"no month folder '{day.year}.{day.month:02d}' in the Instagram folder")
     day_folder, w = drive.find_day_folder(d.list_children(month.id), day)

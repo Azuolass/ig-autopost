@@ -42,7 +42,7 @@ def main() -> int:
     try:
         d = drive.Drive()
         today = datetime.now(ZoneInfo(CONFIG["timezone"])).date()
-        root = d.list_children(CONFIG["drive_root_folder_id"])
+        root = d.list_children(drive.root_folder_id())
         for offset in range(0, 3):
             day = today + timedelta(days=offset)
             month = drive.find_month_folder(root, day)

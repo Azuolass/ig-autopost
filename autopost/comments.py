@@ -1,6 +1,6 @@
 """Reply to comments under the account's own posts, using the templates in replies/templates.json.
 
-Runs every 15 minutes. For each recent post it reads the top-level comments and,
+Runs every 5 minutes. For each configured recent post it pages through comments and,
 for comments not handled yet:
 
   * skips our own comments, spam, and comments we (or a person on the team)
@@ -158,8 +158,9 @@ def main(argv=None) -> int:
 
     now = datetime.now(timezone.utc)
     max_age = timedelta(days=cfg.get("max_comment_age_days", 7))
-    media = ig._call("GET", f"{ig.user_id}/media", fields="id,caption,permalink,timestamp,comments_count",
-                     limit=cfg.get("watch_posts", 15)).get("data", [])
+    watch_posts = max(1, int(cfg.get("watch_posts", 15)))
+    media = list(ig.edge(f"{ig.user_id}/media", fields="id,caption,permalink,timestamp,comments_count",
+                         limit=min(watch_posts, 50), max_items=watch_posts))
 
     state = load_state()
     # a dry run shows decisions for existing comments too, and saves nothing
@@ -172,16 +173,16 @@ def main(argv=None) -> int:
     for m in media:
         try:
             try:
-                comments = ig._call(
-                    "GET", f"{m['id']}/comments",
+                comments = list(ig.edge(
+                    f"{m['id']}/comments",
                     fields="id,text,username,from{id,username},timestamp,replies{username,from{id,username}}",
                     limit=50,
-                ).get("data", [])
+                ))
             except InstagramError:
-                comments = ig._call(
-                    "GET", f"{m['id']}/comments",
+                comments = list(ig.edge(
+                    f"{m['id']}/comments",
                     fields="id,text,username,timestamp,replies{username}", limit=50,
-                ).get("data", [])
+                ))
             for c in comments:
                 c["username"] = c.get("username") or (c.get("from") or {}).get("username")
         except InstagramError as e:
@@ -192,9 +193,14 @@ def main(argv=None) -> int:
               f"{len(comments)} comments readable, comments_count={m.get('comments_count')}")
         for c in comments:
             cid = c["id"]
-            if cid in state["seen"]:
+            previous = state["seen"].get(cid, {})
+            failed = previous.get("action", "").startswith("reply failed:")
+            if previous and not failed:
                 continue
-            record = {"ts": c.get("timestamp", now.isoformat())}
+            attempts = previous.get("attempts", 0)
+            if failed and (attempts >= 3 or previous.get("retry_after", "") > now.isoformat()):
+                continue
+            record = {"ts": c.get("timestamp", now.isoformat()), "attempts": attempts}
             state["seen"][cid] = record
             user = (c.get("username") or "").lower()
             if (c.get("from") or {}).get("id") == ig.user_id:
@@ -209,14 +215,25 @@ def main(argv=None) -> int:
                 if args.dry_run:
                     out(f"  (too old) @{c.get('username')}: {text[:80]}")
                 continue
+            replies = (c.get("replies") or {}).get("data", [])
+            # On retries, re-read every reply to catch a previous response whose
+            # delivery succeeded even though the API returned an error.
+            if failed or (c.get("replies") or {}).get("paging", {}).get("next"):
+                try:
+                    replies = list(ig.edge(f"{cid}/replies", fields="id,username", limit=50))
+                except InstagramError as e:
+                    state["seen"][cid] = previous if failed else {
+                        **record, "action": f"reply failed: cannot verify replies: {e}"}
+                    continue
             if any((r.get("username") or (r.get("from") or {}).get("username") or "").lower() == my_name
                    or (r.get("from") or {}).get("id") == ig.user_id
-                   for r in (c.get("replies") or {}).get("data", [])):
+                   for r in replies):
                 record["action"] = "already answered"
                 continue
 
             reply, ids, alert, reason = decide(text, matcher, rng)
             record.update({"action": reason, "templates": ids})
+            sent = False
             if reply and budget > 0:
                 message = f"@{c.get('username')} {reply}" if c.get("username") and reason != "emoji" else reply
                 message = message.lower()  # house style: no capitals
@@ -226,20 +243,28 @@ def main(argv=None) -> int:
                     out(f"\n[{reason}: {', '.join(ids)}] @{c.get('username')}: {text}\n--> {message}")
                 else:
                     try:
+                        budget -= 1  # failures also consume this run's request budget
+                        record["attempts"] = attempts + 1
                         ig._call("POST", f"{cid}/replies", message=message)
                         replied += 1
-                        budget -= 1
+                        sent = True
                         time.sleep(cfg.get("seconds_between_replies", 4))
                     except InstagramError as e:
                         record["action"] = f"reply failed: {e}"
+                        record["retry_after"] = (now + timedelta(minutes=5 * 2 ** attempts)).isoformat()
                         alert = True
             elif reply:
                 record["action"] = "deferred (reply budget used)"
-                del state["seen"][cid]  # try again next run
+                if failed:
+                    state["seen"][cid] = previous
+                else:
+                    del state["seen"][cid]  # try again next run
             elif args.dry_run:
                 out(f"\n[{reason}] @{c.get('username')}: {text}\n--> (no reply)")
             if alert:
-                what = "atsakyta šablonu, bet reikia žmogaus DM'e" if reply else "neatsakytas klausimas"
+                what = ("atsakyta šablonu, bet reikia žmogaus DM'e" if sent else
+                        "atsakyti nepavyko; bus pakartota" if reply and record["attempts"] < 3 else
+                        "atsakyti nepavyko po 3 bandymų; reikia žmogaus" if reply else "neatsakytas klausimas")
                 alerts.append(f"• @{c.get('username')}: „{text[:200]}\"\n  ({what}) {m.get('permalink', '')}")
 
     if first_run:

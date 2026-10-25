@@ -47,6 +47,31 @@ class Instagram:
         return data
 
     # -- account ------------------------------------------------------------
+    def edge(self, path: str, *, max_items: int | None = None, **params):
+        """Walk cursor pages without following token-bearing URLs to other hosts."""
+        after = None
+        cursors = set()
+        seen = set()
+        count = 0
+        while True:
+            page = self._call("GET", path, **params, **({"after": after} if after else {}))
+            for item in page.get("data", []):
+                identity = item.get("id")
+                if identity is not None and identity in seen:
+                    continue
+                seen.add(identity)
+                yield item
+                count += 1
+                if max_items is not None and count >= max_items:
+                    return
+            paging = page.get("paging") or {}
+            if not paging.get("next"):
+                return
+            after = (paging.get("cursors") or {}).get("after")
+            if not after or after in cursors:
+                raise InstagramError(f"pagination cursor missing or repeated: {path}")
+            cursors.add(after)
+
     def me(self) -> dict:
         return self._call("GET", "me", fields="user_id,username,account_type,media_count")
 

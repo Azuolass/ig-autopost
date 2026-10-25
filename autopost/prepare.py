@@ -31,10 +31,16 @@ def safe(s: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", s).strip("_")
 
 
-def vilnius_time(day: date, slot: int) -> str:
-    h, m = map(int, CONFIG["slots"][str(slot)].split(":"))
-    ny = datetime(day.year, day.month, day.day, h, m, tzinfo=ZoneInfo(CONFIG["timezone"]))
-    return ny.astimezone(ZoneInfo("Europe/Vilnius")).strftime("%Y-%m-%d %H:%M")
+def vilnius_time(day: date, slot: int) -> str | None:
+    """The actual queue is authoritative; unscheduled/skipped posts have no time."""
+    matches = [it for it in music.load_json(ROOT / "trigger" / "queue.json", [])
+               if it["date"] == day.isoformat() and it["slot"] == slot]
+    if len(matches) > 1:
+        raise ValueError(f"duplicate queue entry: {day}#{slot}")
+    if not matches or matches[0].get("skip"):
+        return None
+    when = datetime.strptime(matches[0]["at"], "%Y-%m-%d %H:%M")
+    return when.replace(tzinfo=ZoneInfo("Europe/Vilnius")).strftime("%Y-%m-%d %H:%M")
 
 
 def thumb(data: bytes, height: int) -> Image.Image:

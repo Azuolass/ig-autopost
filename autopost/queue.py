@@ -37,7 +37,9 @@ def main() -> int:
         if it["late"] > LATE_LIMIT and not it.get("allow_late"):
             print(f"{it['key']} is {it['late']} late; not publishing automatically")
             publish.notify(f"⚠️ {it['key']} ({it['at']} LT) praleistas – vėluoja daugiau nei 3 val. Neįkeltas.")
-            it["skip"] = True
+            for original in items:
+                if f"{original['date']}#{original['slot']}" == it["key"]:
+                    original["skip"] = True
             QUEUE.write_text(json.dumps(items, indent=2, ensure_ascii=False) + "\n")
             continue
         print(f"publishing {it['key']} planned for {it['at']} LT")
