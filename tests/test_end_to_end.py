@@ -95,6 +95,7 @@ class FakeIG:
 @pytest.fixture
 def env(tmp_path, monkeypatch):
     monkeypatch.setattr(publish, "CONFIG", {**publish.CONFIG, "drive_root_folder_id": "ROOT"})
+    monkeypatch.setenv("DRIVE_ROOT_FOLDER_ID", "ROOT")
     monkeypatch.setattr(publish.drive, "Drive", FakeDrive)
     monkeypatch.setattr(publish, "Instagram", FakeIG)
     monkeypatch.setattr(publish, "STATE_FILE", tmp_path / "state.json")
