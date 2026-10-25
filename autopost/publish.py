@@ -270,6 +270,7 @@ def main(argv=None) -> int:
         msg += f"\n\n🎵 Pridėk dainą ({why}):\n{song}\n(telefone: ⋯ → Edit → Add music → Saved)"
     else:
         msg += f"\n\n🎵 {why}"
+    msg += "\n\n🙈 Paslėpk like'us: ⋯ → Hide like count\n📲 Istorija: po postu ➤ Share → Add to story"
     if assets.warnings:
         msg += "\n\n⚠️ " + "\n⚠️ ".join(assets.warnings)
     notify(msg)
