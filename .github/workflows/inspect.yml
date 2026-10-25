@@ -1,0 +1,25 @@
+name: Inspect one Drive file
+on:
+  push:
+    branches: [main]
+    paths: ["trigger/inspect.json"]
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements.txt
+      - env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          DRIVE_ROOT_FOLDER_ID: ${{ secrets.DRIVE_ROOT_FOLDER_ID }}
+        run: python -m tools.inspect_file $(python -c "import json;t=json.load(open('trigger/inspect.json'));print(t['date'],t['slot'],t['num'])")
+      - if: always()
+        run: |
+          cd out && git init -q && git checkout -q --orphan inspect
+          git config user.name autopost && git config user.email autopost@users.noreply.github.com
+          git add . && git commit -qm inspect && git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" inspect:inspect
