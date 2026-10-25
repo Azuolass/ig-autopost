@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>dl</title>
+<style>body{font-family:sans-serif;padding:16px;background:#fff;color:#111}button{font-size:22px;padding:16px;width:100%}#log{white-space:pre-wrap;font-size:13px}</style></head><body>
+<button id="b">DOWNLOAD ALL</button><div id="log"></div>
+<script>
+const p=new URLSearchParams(location.search).get('p');const log=t=>document.getElementById('log').textContent+=t+"\n";
+const base='https://raw.githubusercontent.com/Azuolass/ig-autopost/prepared/ready/'+p+'/';
+document.getElementById('b').onclick=async()=>{
+  const info=await (await fetch(base+'info.json')).json();
+  for(const [i,n] of info.images.entries()){
+    const b=await (await fetch(base+n)).blob();
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=info.post.replace('#','_')+'_'+n;document.body.appendChild(a);a.click();a.remove();
+    log('ok '+n);await new Promise(r=>setTimeout(r,1200));
+  }
+  log('DONE '+info.images.length);
+};
+</script></body></html>
