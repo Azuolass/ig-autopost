@@ -1,3 +1,5 @@
+> **Dabartinė būsena (2026-10-25):** postai keliami pagal `trigger/queue.json` 15:00 / 19:00 / 23:00 Lietuvos laiku. Visa sistemos instrukcija agentui (Codex ir kt.) – [AGENTS.md](AGENTS.md). Žemiau – pirminė setup instrukcija.
+
 # Instagram autopilotas – Success Hunters
 
 Kasdien 3 karuselės iš Google Drive į Instagram, JAV piko metu:
