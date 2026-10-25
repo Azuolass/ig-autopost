@@ -220,6 +220,8 @@ def main(argv=None) -> int:
             if reply and budget > 0:
                 message = f"@{c.get('username')} {reply}" if c.get("username") and reason != "emoji" else reply
                 message = message.lower()  # house style: no capitals
+                if SITE in message and "link in bio" not in message:
+                    message = message.replace(SITE, SITE + " or link in bio", 1)
                 if args.dry_run:
                     out(f"\n[{reason}: {', '.join(ids)}] @{c.get('username')}: {text}\n--> {message}")
                 else:
