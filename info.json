@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "name": "01_original_artwork.jpg",
+    "mimeType": "image/jpeg",
+    "modifiedTime": "2026-10-16T18:29:23.792Z",
+    "md5Checksum": "01e697ff2da51dd1ea0c7c515ee28c72",
+    "size": "2097152"
+  },
+  "downloaded": 2097152,
+  "head": "ffd8ffe11f074578696600004d4d002a",
+  "tail": "e4926c3a16e8cb14c5314ca4100c8f6c",
+  "open_strict": "fail image file is truncated (0 bytes not processed)",
+  "open_loose": "ok JPEG (4500, 6000)"
+}
