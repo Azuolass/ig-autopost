@@ -26,10 +26,40 @@ def parse_ratio(ratio: str) -> float:
     return float(a) / float(b)
 
 
+def check_decodable(data: bytes) -> str:
+    """'ok', 'end-cut' (only the file's end marker is missing; picture complete) or raises.
+
+    Some Drive uploads are cut at exactly 2 MiB. If the decoded picture still has
+    real content in its last rows, nothing visible is lost and it is safe to use.
+    """
+    try:
+        Image.open(io.BytesIO(data)).convert("RGB")
+        return "ok"
+    except OSError:
+        pass
+    from PIL import ImageFile
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
+    try:
+        im = Image.open(io.BytesIO(data)).convert("L")
+    finally:
+        ImageFile.LOAD_TRUNCATED_IMAGES = False
+    h = im.height
+    tail = im.crop((0, h - max(4, h // 100), im.width, h))
+    if ImageStat.Stat(tail).stddev[0] < 2:  # flat grey fill = picture really missing
+        raise OSError("image is cut off: the bottom of the picture is missing")
+    return "end-cut"
+
+
 def to_instagram_jpeg(
     data: bytes, max_width: int = 1440, quality: int = 92, pad_to: str | None = None
 ) -> tuple[bytes, tuple[int, int]]:
-    img = Image.open(io.BytesIO(data))
+    from PIL import ImageFile
+    ImageFile.LOAD_TRUNCATED_IMAGES = check_decodable(data) == "end-cut"
+    try:
+        img = Image.open(io.BytesIO(data))
+        img.load()
+    finally:
+        ImageFile.LOAD_TRUNCATED_IMAGES = False
     img = ImageOps.exif_transpose(img)
     icc = img.info.get("icc_profile")
     if icc:  # convert to sRGB so colours stay right once the profile is dropped

@@ -94,7 +94,8 @@ def main(argv=None) -> int:
                 for _ in range(3):  # Drive downloads occasionally arrive cut short
                     try:
                         data = d.download(f.id)
-                        Image.open(io.BytesIO(data)).convert("RGB")
+                        if images.check_decodable(data) == "end-cut":
+                            a.warnings.append(f"{f.name}: file end missing in Drive, picture complete, used")
                         break
                     except Exception:
                         data = None
