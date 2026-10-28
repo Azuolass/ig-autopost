@@ -52,7 +52,7 @@ notify, refresh_token, check_setup, prepare). Tests: `python -m pytest -q` (all 
 
 ## 4. Everyday tasks (how to do them)
 
-**Schedule new days** (current standard times 15:00, 19:00, 23:00 Vilnius): append to
+**Schedule new days** (current standard times 15:00, 19:00, 21:00 Vilnius): append to
 `trigger/queue.json` three lines per day; commit + push to `main`. Before scheduling, optionally run
 prepare for those dates (push `trigger/prepare.json` `{"from","to","run":<n+1>}`), then check
 `summary.json` on branch `prepared` for missing folders, broken files, warnings.
@@ -69,9 +69,12 @@ prepare for those dates (push `trigger/prepare.json` `{"from","to","run":<n+1>}`
 ## 5. Rules the owner set (keep them)
 
 - Captions come from the PDF exactly, with blank lines between paragraphs (`captions.clean_caption`).
-- Replies: all lowercase; any reply mentioning `successhuntersprints.com` adds `or link in bio`;
-  emoji-only or unmatched comments → one emoji from `🤔 🫡 🧨 🚀 🥷 📈 🤫 👀 🔥 💣`, no @mention;
-  unknown questions → Discord for a human; spam/insults → no reply. Only new comments are answered.
+- Replies follow `Success_Hunters_Instagram_AI_Response_Guide.txt` (27.10.2026): short, lowercase,
+  emoji-led. Order: spam → skip; bare tag of a friend → skip; emoji only → one emoji from
+  `🫡 🧨 🚀 🔥 🙌 🖤 💯 👏`; customer issue → short "DM us your order number" + Discord;
+  criticism / AI / originality → no reply, Discord; then templates (e.g. `link in bio 👀`), agreement
+  (`💯`, `always. 🫡`), praise; unknown question → Discord. **Never 🤔 or 🤫.** Don't claim
+  worldwide shipping: ask the country. Mentions of @successhunters.prints are ignored when matching.
 - Images: metadata (EXIF/XMP/C2PA) is stripped on every upload. **Do not try to remove or defeat AI
   watermarks (visible or invisible, e.g. SynthID) or Instagram's "AI info" label.** Instagram sometimes
   labels posts "Likely made with AI" from the pixels; that is accepted.

@@ -1,5 +1,5 @@
 {
-  "_comment": "Checked top to bottom; up to two matching templates are combined. A template with 'alert': true (customer issue) is sent alone and also goes to Discord so a person follows up in DMs. 'excludes' drops more generic templates when this one matches. Triggers are regular expressions, case-insensitive.",
+  "_comment": "Order: spam -> skip; bare @tag -> skip; emoji only -> one emoji; customer-issue templates (alert) -> short reply + Discord; criticism -> no reply + Discord; other templates (max two); agreement; praise; unmatched question -> Discord; anything else -> one emoji. Triggers are case-insensitive regular expressions. The bot never uses 🤔 or 🤫.",
   "templates": [
     {
       "id": "damaged",
@@ -10,7 +10,7 @@
         "arrived (ripped|torn|bent|cracked)"
       ],
       "alert": true,
-      "reply": "We're sorry your artwork arrived this way.\n\nPlease send us a DM with your order number and clear photos of the damage and packaging. We'll review everything and help resolve the issue."
+      "reply": "sorry about that. please DM us your order number and photos of the damage so the team can check."
     },
     {
       "id": "where_is_my_order",
@@ -23,7 +23,7 @@
         "still (waiting|haven'?t)"
       ],
       "alert": true,
-      "reply": "We've got you.\n\nSend us a DM with your order number and the email used at checkout. Our team will check the status and get back to you."
+      "reply": "sorry about that. please DM us your order number so the team can check."
     },
     {
       "id": "tracking",
@@ -33,7 +33,7 @@
         "track my order"
       ],
       "alert": true,
-      "reply": "Absolutely. Once your order ships, you'll receive tracking information.\n\nNeed help? Send us a DM with your order number and we'll look into it."
+      "reply": "you get tracking details once your order ships. if something's off, DM us your order number."
     },
     {
       "id": "return",
@@ -43,7 +43,7 @@
         "refund"
       ],
       "alert": true,
-      "reply": "We want you to be confident in your purchase.\n\nReturn and exchange eligibility depends on the order and our store policies. Send us a DM with your order number and we'll help you with the next steps."
+      "reply": "please DM us your order number and we'll go through the options with you."
     },
     {
       "id": "custom_size",
@@ -54,7 +54,7 @@
         "other sizes?"
       ],
       "alert": true,
-      "reply": "Looking for a specific size?\n\nSend us a DM with your preferred dimensions and the artwork name. We'll check what's possible.",
+      "reply": "DM us the artwork and the size you have in mind. we'll check what's possible.",
       "excludes": [
         "custom",
         "sizes"
@@ -69,7 +69,7 @@
         "my own (design|photo|picture)"
       ],
       "alert": true,
-      "reply": "Have something specific in mind?\n\nSend us a DM with your idea and the details. We'll let you know what's possible."
+      "reply": "DM us your idea. we'll let you know what's possible."
     },
     {
       "id": "bulk",
@@ -80,7 +80,7 @@
         "for (our|the) (office|business|company|store)"
       ],
       "alert": true,
-      "reply": "Building something bigger?\n\nWe welcome bulk order inquiries for offices, businesses and other spaces. Send us a DM with the artwork names, quantities and sizes you need."
+      "reply": "DM us the artworks and quantities. the team will get back to you."
     },
     {
       "id": "discount",
@@ -92,7 +92,7 @@
         "\\bdeal\\b",
         "\\bcode\\b"
       ],
-      "reply": "Great art is an investment in your space.\n\nCheck successhuntersprints.com for our latest offers and available promotions."
+      "reply": "current offers are in the link in bio 👀"
     },
     {
       "id": "digital",
@@ -103,7 +103,7 @@
         "\\bpdf\\b",
         "\\bfile\\b"
       ],
-      "reply": "Yes. Selected artworks are available as digital downloads.\n\nDownload. Print. Make it yours.\n\nExplore our collection at successhuntersprints.com."
+      "reply": "selected artworks are available as digital downloads. link in bio 👀"
     },
     {
       "id": "framed",
@@ -111,7 +111,7 @@
         "\\bframe[ds]?\\b",
         "framing"
       ],
-      "reply": "Yes. Choose from black, white or wood-framed prints.\n\nClean lines. Timeless style.\n\nExplore your options at successhuntersprints.com."
+      "reply": "yes. black, white or wood frames. link in bio 👀"
     },
     {
       "id": "canvas_or_poster",
@@ -121,7 +121,7 @@
         "material",
         "\\bpaper\\b"
       ],
-      "reply": "Your space. Your choice.\n\nWe offer thin-wrap canvas, thick-wrap canvas, framed prints and unframed posters. Choose the finish that fits your vision."
+      "reply": "thin canvas, thick canvas, framed or poster. link in bio 👀"
     },
     {
       "id": "sizes",
@@ -132,7 +132,7 @@
         "measurements?",
         "\\bwhat size"
       ],
-      "reply": "From small statement pieces to oversized wall art.\n\nOur sizes range from 18x12\" to 60x40\", depending on the artwork.\n\nExplore available sizes at successhuntersprints.com."
+      "reply": "from 18x12\" up to 60x40\", depending on the artwork. link in bio 👀"
     },
     {
       "id": "price",
@@ -140,9 +140,13 @@
         "price",
         "pricing",
         "how much",
-        "\\bcost"
+        "\\bcost",
+        "\\bprecio",
+        "\\bpreis",
+        "\\bprix\\b",
+        "\\bkaina"
       ],
-      "reply": "Prices depend on the artwork, size and finish.\n\nExplore all available options and current prices at successhuntersprints.com."
+      "reply": "depends on the size and finish. current prices are in the link in bio."
     },
     {
       "id": "usa",
@@ -154,7 +158,7 @@
         "\\bin (the )?us\\b",
         "\\bus shipping"
       ],
-      "reply": "Absolutely. The USA is our primary market.\n\nShop your next statement piece at successhuntersprints.com."
+      "reply": "yes. the usa is our main market. link in bio 👀"
     },
     {
       "id": "shipping_time",
@@ -165,7 +169,7 @@
         "when (will|would|does) .*(arrive|ship|come)",
         "how (fast|quick)"
       ],
-      "reply": "Every piece is made to order.\n\nProduction and delivery times depend on your location and selected product. You'll receive tracking details once your order ships."
+      "reply": "every piece is made to order, so it depends on your location. you get tracking once it ships."
     },
     {
       "id": "worldwide",
@@ -175,9 +179,12 @@
         "ship(ping)? to",
         "deliver(y)? to",
         "do you ship",
-        "\\bship\\b"
+        "\\bship\\b",
+        "do you (ship|deliver)",
+        "\\bdeliver(y)?\\??$",
+        "ship(ping)? (here|outside|abroad)"
       ],
-      "reply": "Yes, we ship worldwide.\n\nChoose your favorite piece, and we'll take care of the rest."
+      "reply": "which country are you ordering from?"
     },
     {
       "id": "quality",
@@ -188,7 +195,7 @@
         "is it (good|legit)",
         "\\blegit\\b"
       ],
-      "reply": "Quality matters.\n\nOur artwork is produced using high-resolution printing and carefully selected materials. Built to elevate your space."
+      "reply": "high-res printing on quality materials. built to last. 🫡"
     },
     {
       "id": "recommend",
@@ -198,7 +205,7 @@
         "which one",
         "most popular"
       ],
-      "reply": "It depends on the energy you want in your space.\n\nDiscipline. Ambition. Focus. Success.\n\nExplore our collection and find the piece that speaks to you at successhuntersprints.com."
+      "reply": "depends on the energy you want in the room. link in bio 👀"
     },
     {
       "id": "where_to_buy",
@@ -216,7 +223,7 @@
         "\\baccess to (these|this|them|it)\\b",
         "where (are|is) (these|this|they|it) (sold|from)"
       ],
-      "reply": "You can find our artwork at successhuntersprints.com.\n\nFind your piece. Own your space."
+      "reply": "link in bio 👀"
     },
     {
       "id": "support",
@@ -228,9 +235,53 @@
         "email"
       ],
       "alert": true,
-      "reply": "Need assistance?\n\nSend us a DM with your question and your order number, if you have one. Our team will be happy to help."
+      "reply": "DM us your question and order number if you have one. the team will help."
+    },
+    {
+      "id": "suggestion",
+      "triggers": [
+        "make (a|one|this|it) ?(version|one)? ?(with|of|for)",
+        "(do|make) one (with|of|for)",
+        "can you (make|do) (one|a|this)",
+        "you should (make|do)",
+        "version (with|of)"
+      ],
+      "reply": "noted. 🫡"
+    },
+    {
+      "id": "fandom",
+      "triggers": [
+        "\\bgoat\\b",
+        "🐐",
+        "\\blegend",
+        "\\bmamba\\b",
+        "\\bgoated\\b"
+      ],
+      "reply": "🐐"
     }
   ],
+  "agreement": {
+    "_comment": "agreement with the message -> short agreement, no CTA",
+    "triggers": [
+      "\\bfacts\\b",
+      "so true",
+      "\\bexactly\\b",
+      "\\bcorrect\\b",
+      "\\bagree",
+      "\\balways\\b",
+      "locked in",
+      "lock(ed)? in",
+      "\\btrue\\b",
+      "\\bfr\\b",
+      "💯"
+    ],
+    "replies": [
+      "💯",
+      "always. 🫡",
+      "exactly.",
+      "💯💯"
+    ]
+  },
   "praise": {
     "enabled": true,
     "triggers": [
@@ -242,11 +293,8 @@
       "\\bsick\\b",
       "\\bdope\\b",
       "\\bclean\\b",
-      "\\bfacts\\b",
-      "so true",
       "motivat",
       "inspir",
-      "\\bgoat\\b",
       "great",
       "awesome",
       "nice",
@@ -259,17 +307,58 @@
       "💯",
       "🙌",
       "💪",
-      "🐐",
       "😮",
       "🤩",
-      "♥"
+      "♥",
+      "respect",
+      "🫡",
+      "💵",
+      "🖤",
+      "👊"
     ],
     "replies": [
-      "Appreciate you.",
-      "Thank you. Glad it speaks to you.",
-      "Means a lot. Thank you.",
-      "Appreciate the support.",
-      "Thank you for being here."
+      "appreciate you. 🫡",
+      "means a lot.",
+      "thank you for being here.",
+      "appreciate the support. 🙌",
+      "🫡",
+      "🙌",
+      "🖤"
+    ]
+  },
+  "criticism": {
+    "_comment": "complaints, corrections, AI/originality questions: never an emoji or CTA; no reply, sent to Discord for a person",
+    "triggers": [
+      "\\bwrong\\b",
+      "supposed to be",
+      "\\bmistake",
+      "\\bugly\\b",
+      "\\btrash\\b",
+      "\\bfake\\b",
+      "\\bscam",
+      "\\bstole",
+      "\\bcopy\\b",
+      "copied",
+      "\\bai\\b",
+      "a\\.i\\.",
+      "artificial",
+      "not (his|her|the|a|real)",
+      "isn'?t (his|her|real)",
+      "doesn'?t look",
+      "looks off",
+      "\\bcringe\\b",
+      "\\bwack\\b",
+      "\\bmid\\b",
+      "\\bterrible\\b",
+      "\\bawful\\b",
+      "\\bworst\\b",
+      "\\bhate\\b",
+      "\\bnot a\\b",
+      "\\bwhy is\\b",
+      "\\bthat'?s not\\b",
+      "\\bthis is not\\b",
+      "\\bcopyright",
+      "\\blicen[cs]"
     ]
   },
   "spam": [
@@ -288,16 +377,14 @@
     "enabled": true,
     "_comment": "comment made only of emoji -> reply with one of these, no @mention",
     "replies": [
-      "🤔",
       "🫡",
       "🧨",
       "🚀",
-      "🥷",
-      "📈",
-      "🤫",
-      "👀",
       "🔥",
-      "💣"
+      "🙌",
+      "🖤",
+      "💯",
+      "👏"
     ]
   }
 }

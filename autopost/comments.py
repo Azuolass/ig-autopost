@@ -53,6 +53,16 @@ class Matcher:
         self.spam = _compile(data.get("spam", []))
         emoji = data.get("emoji_only", {})
         self.emoji_replies = emoji.get("replies", []) if emoji.get("enabled", False) else []
+        agreement = data.get("agreement", {})
+        self.agreement = _compile(agreement.get("triggers", []))
+        self.agreement_replies = agreement.get("replies", [])
+        self.criticism = _compile(data.get("criticism", {}).get("triggers", []))
+
+    def is_agreement(self, text: str) -> bool:
+        return bool(self.agreement_replies) and any(p.search(text) for p in self.agreement)
+
+    def is_criticism(self, text: str) -> bool:
+        return any(p.search(text) for p in self.criticism)
 
     def is_emoji_only(self, text: str) -> bool:
         t = text.strip()
@@ -89,22 +99,48 @@ def combine(templates: list[dict]) -> str:
         site_seen = site_seen or SITE in text
         if text.strip():
             parts.append(text)
-    return "\n\n".join(parts)
+    # "link in bio" once, at the end
+    for i in range(len(parts) - 1):
+        if "link in bio" in parts[-1]:
+            parts[i] = re.sub(r"\s*link in bio 👀$", "", parts[i]).rstrip()
+    return "\n\n".join(p for p in parts if p)
+
+
+MENTION = re.compile(r"@[\w.]+")
+OWN_MENTION = re.compile(r"@successhunters[\w.]*", re.I)
 
 
 def decide(text: str, matcher: Matcher, rng: random.Random) -> tuple[str | None, list[str], bool, str]:
-    """Return (reply or None, template ids, alert, reason)."""
+    """Return (reply or None, template ids, alert, reason).
+
+    @mentions are removed first, so "@successhunters.prints 🫡" counts as emoji only
+    and a bare "@friend" tag is skipped.
+    """
     if matcher.is_spam(text):
         return None, [], False, "spam"
+    text = OWN_MENTION.sub(" ", text)
+    had_mention = bool(MENTION.search(text))  # someone else is tagged
+    text = MENTION.sub(" ", text).strip()
+    if not text:
+        return None, [], False, "tag only" if had_mention else "empty"
     if matcher.is_emoji_only(text):
         return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
     hits = matcher.templates_for(text)
+    if hits and hits[0].get("alert"):  # customer issue first, even inside praise
+        return combine(hits), [t["id"] for t in hits], True, "template"
+    if matcher.is_criticism(text):
+        return None, [], True, "criticism"
     if hits:
         return combine(hits), [t["id"] for t in hits], any(t.get("alert") for t in hits), "template"
+    if matcher.is_agreement(text):
+        return rng.choice(matcher.agreement_replies), ["agreement"], False, "agreement"
     if matcher.is_praise(text):
         return rng.choice(matcher.praise_replies), ["praise"], False, "praise"
     if "?" in text:
         return None, [], True, "unanswered question"
+    if had_mention:
+        # friends talking to each other ("@sam you need this") -> stay out of it
+        return None, [], False, "friend tag"
     if matcher.emoji_replies:  # anything else gets one of our emoji
         return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
     return None, [], False, "no match"

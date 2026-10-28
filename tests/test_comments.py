@@ -59,8 +59,8 @@ def test_issue_templates_alert_people():
 
 def test_combined_reply_has_shop_link_once():
     text = decide("how much and what sizes?", M, RNG)[0]
-    assert text.count("successhuntersprints.com") == 1
-    assert "18x12" in text and "Prices depend" in text
+    assert text.count("link in bio") == 1
+    assert "18x12" in text and "depends on the size" in text
 
 
 def test_all_replies_fit_in_a_comment():
