@@ -391,3 +391,9 @@ def test_icc_profile_converted_not_kept():
     out, _ = images.to_instagram_jpeg(buf.getvalue())
     assert 0xE2 not in _jpeg_markers(out)  # APP2 = ICC
     assert Image.open(io.BytesIO(out)).getpixel((50, 50))[0] > 180
+
+
+def test_new_pdf_header_is_removed():
+    from autopost.captions import clean_caption
+    raw = 'Pain Is Fuel Instagram caption SH IG DAILY 30 October 2026 use every setback.\n\nshop now. "Pain Is Fuel". link in bio.'
+    assert clean_caption(raw).startswith("use every setback.")
