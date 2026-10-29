@@ -68,7 +68,11 @@ prepare for those dates (push `trigger/prepare.json` `{"from","to","run":<n+1>}`
 
 ## 5. Rules the owner set (keep them)
 
-- Captions come from the PDF exactly, with blank lines between paragraphs (`captions.clean_caption`).
+- **Caption style (owner's standing rule, 29.10.2026):** text from the Drive PDF, all lowercase, short lines
+  with a blank line between paragraphs, ending `shop now. "<Product Name>". link in bio.` Only the product
+  name in quotes keeps its capitals. The PDF header (`<Title> Instagram caption SH IG DAILY <date>`) is
+  never part of the caption. All of this is enforced in `captions.clean_caption`; check `summary.json` /
+  `caption.txt` on branch `prepared` before scheduling new days.
 - Replies follow `Success_Hunters_Instagram_AI_Response_Guide.txt` (27.10.2026): short, lowercase,
   emoji-led. Order: spam → skip; bare tag of a friend → skip; emoji only → one emoji from
   `🫡 🧨 🚀 🔥 🙌 🖤 💯 👏`; customer issue → short "DM us your order number" + Discord;

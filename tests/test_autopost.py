@@ -397,3 +397,9 @@ def test_new_pdf_header_is_removed():
     from autopost.captions import clean_caption
     raw = 'Pain Is Fuel Instagram caption SH IG DAILY 30 October 2026 use every setback.\n\nshop now. "Pain Is Fuel". link in bio.'
     assert clean_caption(raw).startswith("use every setback.")
+
+
+def test_caption_house_style_lowercase_keeps_product_name():
+    from autopost.captions import clean_caption
+    raw = 'Focus Instagram caption SH IG DAILY 31 October 2026 Cut the noise.\n\nShop now. "Focus". Link in bio.'
+    assert clean_caption(raw) == 'cut the noise.\n\nshop now. "Focus". link in bio.'

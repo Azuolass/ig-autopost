@@ -44,6 +44,12 @@ _DOC_HEADER = re.compile(
     r"(?:\d{1,2}\s+[a-z]+\s+\d{4}|\d{1,2}[./]\d{1,2}[./]\d{2,4})?\s*", re.I)
 
 
+def house_case(text: str) -> str:
+    """Owner's rule: captions are lowercase; only the product name in quotes keeps its letters."""
+    parts = re.split(r'("[^"\n]*"|“[^”\n]*”)', text)
+    return "".join(p if i % 2 else p.lower() for i, p in enumerate(parts))
+
+
 def _is_header(line: str, title: str | None) -> bool:
     if title and _norm(line) == _norm(title):
         return True
@@ -89,6 +95,7 @@ def clean_caption(raw: str, title: str | None = None) -> str:
     # newer caption PDFs print "<Title> / Instagram caption / SH IG DAILY / 29 October 2026"
     # as a header that gets joined into the first sentence
     caption = _DOC_HEADER.sub("", caption, count=1).lstrip()
+    caption = house_case(caption)
     if len(caption) > IG_CAPTION_LIMIT:
         raise ValueError(f"caption is {len(caption)} chars, Instagram allows {IG_CAPTION_LIMIT}")
     if not caption:
