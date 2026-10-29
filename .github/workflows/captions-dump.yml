@@ -1,0 +1,30 @@
+name: Dump recent captions (read only)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from autopost.instagram import Instagram
+          cfg = json.load(open("config.json"))
+          ig = Instagram(os.environ["IG_ACCESS_TOKEN"], os.environ.get("IG_USER_ID") or "me", cfg["graph_api_base"])
+          me = ig.me(); ig.user_id = str(me["user_id"])
+          rows = list(ig.edge(f"{ig.user_id}/media", fields="id,caption,permalink,timestamp,media_type", limit=25, max_items=25))
+          with open("state/recent_captions.txt", "w") as f:
+              for m in rows:
+                  f.write(f"=== {m.get('timestamp')} {m.get('media_type')} {m.get('permalink')}\n{m.get('caption','')}\n\n")
+          PY
+          git config user.name autopost; git config user.email autopost@users.noreply.github.com
+          git add state/recent_captions.txt; git commit -qm "recent captions"; git pull --rebase -q; git push -q
