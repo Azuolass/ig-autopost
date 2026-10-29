@@ -1,0 +1,25 @@
+{
+  "post": "2026-10-30#2",
+  "title": "Pressure Vs Focus",
+  "publish_vilnius": null,
+  "song": "No Role Modelz – J. Cole (27K reels)",
+  "song_index": 29,
+  "images": [
+    "01_original_artwork.jpg",
+    "02_model_floor_support.jpg",
+    "02_room_wide.jpg",
+    "03_model_side_view.jpg",
+    "03_mounted_oblique.jpg",
+    "04_floor_lean.jpg",
+    "04_model_holding.jpg",
+    "05_low_angle.jpg",
+    "06_model_considering.jpg",
+    "07_print_texture.jpg",
+    "08_floor_flat.jpg",
+    "11_model_positioning.jpg"
+  ],
+  "removed": [],
+  "warnings": [
+    "duplicate image numbers: [1, 2, 2, 3, 3, 4, 4, 5, 6, 7, 8, 11]"
+  ]
+}

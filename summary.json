@@ -1,0 +1,306 @@
+[
+  {
+    "post": "2026-10-29#1",
+    "title": "Tell Me I Cant Website",
+    "publish_vilnius": null,
+    "song": "FE!N (feat. Playboi Carti) – Travis Scott (573K reels)",
+    "song_index": 25,
+    "images": [
+      "01_website_view_01.jpg",
+      "02_website_view_02.jpg",
+      "03_website_view_03.jpg",
+      "04_website_view_04.jpg",
+      "05_website_view_05.jpg",
+      "20_shop now ig.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-10-29#2",
+    "title": "1 Percent Better Everyday",
+    "publish_vilnius": null,
+    "song": "21 Questions (feat. Nate Dogg) – 50 Cent (5.8K reels)",
+    "song_index": 26,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_model_positioning.jpg",
+      "03_mounted_oblique.jpg",
+      "04_floor_lean.jpg",
+      "05_low_angle.jpg",
+      "06.jpg",
+      "07_print_texture.jpg",
+      "08_floor_flat.jpg",
+      "12_model_side_view.jpg",
+      "13_model_floor_support.jpg",
+      "20_shop now ig.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-10-29#3",
+    "title": "Framed Posters",
+    "publish_vilnius": null,
+    "song": "Window Shopper – 50 Cent (4K reels)",
+    "song_index": 27,
+    "images": [
+      "01_above_the_911_model.jpg",
+      "03_911_legacy_model.jpg",
+      "04_make_money_trading_interior.jpg",
+      "06_discipline_over_motivation_model.jpg",
+      "07_911_midnight_standard_interior.jpg",
+      "08_you_vs_you_larry_bird_model.jpg",
+      "09_countach_power_interior.jpg",
+      "11_tell_none_model.jpg",
+      "12_lock_in_stephen_curry_interior.jpg",
+      "13_911_and_blackbird_model.jpg",
+      "20_shop now ig.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-10-30#1",
+    "title": "Pain Is Fuel",
+    "publish_vilnius": null,
+    "song": "I Get It In – 50 Cent (42K reels)",
+    "song_index": 28,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_floor_flat.jpg",
+      "03_mounted_oblique.jpg",
+      "04_floor_lean.jpg",
+      "05_low_angle.jpg",
+      "06_wrapped_corner.jpg",
+      "07_print_texture.jpg",
+      "09_model_considering.jpg",
+      "12_model_side_view.jpg",
+      "13_model_floor_support.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-10-30#2",
+    "title": "Pressure Vs Focus",
+    "publish_vilnius": null,
+    "song": "No Role Modelz – J. Cole (27K reels)",
+    "song_index": 29,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_model_floor_support.jpg",
+      "02_room_wide.jpg",
+      "03_model_side_view.jpg",
+      "03_mounted_oblique.jpg",
+      "04_floor_lean.jpg",
+      "04_model_holding.jpg",
+      "05_low_angle.jpg",
+      "06_model_considering.jpg",
+      "07_print_texture.jpg",
+      "08_floor_flat.jpg",
+      "11_model_positioning.jpg"
+    ],
+    "removed": [],
+    "warnings": [
+      "duplicate image numbers: [1, 2, 2, 3, 3, 4, 4, 5, 6, 7, 8, 11]"
+    ]
+  },
+  {
+    "post": "2026-10-30#3",
+    "title": "Framed Posters",
+    "publish_vilnius": null,
+    "song": "Gangsta's Paradise – Coolio, L.V. (1.6M reels)",
+    "song_index": 30,
+    "images": [
+      "00_911_legacy.jpg",
+      "01_you_vs_you_larry_bird.jpg",
+      "02_countach_power.jpg",
+      "03_own_the_plane.jpg",
+      "04_tell_none.jpg",
+      "05_lock_in_stephen_curry.jpg",
+      "06_911_and_blackbird.jpg",
+      "08_above_the_911.jpg",
+      "09_golden_hour.jpg",
+      "11_make_money_trading.jpg",
+      "12_rari_after_hours.jpg",
+      "13_discipline_over_motivation.jpg",
+      "14_911_midnight_standard.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-10-31#1",
+    "title": "Tell Me Website",
+    "publish_vilnius": null,
+    "song": "Runaway (feat. Pusha T) – Kanye West (1.1M reels)",
+    "song_index": 31,
+    "images": [
+      "01_website_view_01.jpg",
+      "02_website_view_02.jpg",
+      "03_website_view_03.jpg",
+      "04_website_view_04.jpg",
+      "05_website_view_05.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-10-31#2",
+    "title": "Focus",
+    "publish_vilnius": null,
+    "song": "God's Plan – Drake (838K reels)",
+    "song_index": 32,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_room_wide.jpg",
+      "03_mounted_oblique.jpg",
+      "04_floor_lean.jpg",
+      "04_model_considering.jpg",
+      "05_low_angle.jpg",
+      "06_model_holding.jpg",
+      "06_wrapped_corner.jpg",
+      "07_print_texture.jpg",
+      "08_floor_flat.jpg",
+      "12_model_side_view.jpg"
+    ],
+    "removed": [],
+    "warnings": [
+      "duplicate image numbers: [1, 2, 3, 4, 4, 5, 6, 6, 7, 8, 12]"
+    ]
+  },
+  {
+    "post": "2026-10-31#3",
+    "title": "Framed Posters",
+    "publish_vilnius": null,
+    "song": "Can't Tell Me Nothing – Kanye West (91K reels)",
+    "song_index": 33,
+    "images": [
+      "01_bet-on-yourself.jpg",
+      "02_consistency-is-success.jpg",
+      "03_kintsugi.jpg",
+      "04_master-your-mind.jpg",
+      "05_skater-club.jpg",
+      "06_built-in-silence.jpg",
+      "07_obsessed-with-progress.jpg",
+      "08_kaizen.jpg",
+      "10_black-sheep.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-11-01#1",
+    "folder": "01_The_World_Didnt_Know_Yet_Website",
+    "error": "01_The_World_Didnt_Know_Yet_Website: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-01#2",
+    "folder": "02_Lock_In_Dennis_Rodman",
+    "error": "02_Lock_In_Dennis_Rodman: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-01#3",
+    "folder": "03_Framed_Posters",
+    "error": "03_Framed_Posters: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-02#1",
+    "folder": "01_The_Comfort_Zone",
+    "error": "01_The_Comfort_Zone: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-02#2",
+    "folder": "02_Push_Yourself",
+    "error": "02_Push_Yourself: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-02#3",
+    "folder": "03_Framed_Posters",
+    "error": "03_Framed_Posters: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-03#1",
+    "folder": "01_Focus_Eagle",
+    "error": "01_Focus_Eagle: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-03#2",
+    "folder": "02_Early_Mornings_Late_Nights",
+    "error": "02_Early_Mornings_Late_Nights: no instagram_caption*.pdf found"
+  },
+  {
+    "post": "2026-11-03#3",
+    "folder": "03_Framed_Posters",
+    "error": "03_Framed_Posters: no instagram_caption*.pdf found"
+  },
+  {
+    "day": "2026-11-04",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-05",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-06",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-07",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-08",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-09",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-10",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-11",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-12",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-13",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-14",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-15",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-16",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-17",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-18",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-19",
+    "error": "no day folder"
+  },
+  {
+    "day": "2026-11-20",
+    "error": "no day folder"
+  }
+]

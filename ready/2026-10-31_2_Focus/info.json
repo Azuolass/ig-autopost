@@ -1,0 +1,24 @@
+{
+  "post": "2026-10-31#2",
+  "title": "Focus",
+  "publish_vilnius": null,
+  "song": "God's Plan – Drake (838K reels)",
+  "song_index": 32,
+  "images": [
+    "01_original_artwork.jpg",
+    "02_room_wide.jpg",
+    "03_mounted_oblique.jpg",
+    "04_floor_lean.jpg",
+    "04_model_considering.jpg",
+    "05_low_angle.jpg",
+    "06_model_holding.jpg",
+    "06_wrapped_corner.jpg",
+    "07_print_texture.jpg",
+    "08_floor_flat.jpg",
+    "12_model_side_view.jpg"
+  ],
+  "removed": [],
+  "warnings": [
+    "duplicate image numbers: [1, 2, 3, 4, 4, 5, 6, 6, 7, 8, 12]"
+  ]
+}
