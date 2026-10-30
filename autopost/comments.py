@@ -125,6 +125,8 @@ def decide(text: str, matcher: Matcher, rng: random.Random) -> tuple[str | None,
         return None, [], False, "tag only" if had_mention else "empty"
     if matcher.is_emoji_only(text):
         return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
+    if re.search(r"\w\s*(>|<)\s*\w|\bvs\.?\b|better than|\bover\b.*\?", text, re.I) and "?" not in text:
+        return None, [], False, "debate"  # fans arguing who is better: stay out
     hits = matcher.templates_for(text)
     if hits and hits[0].get("alert"):  # customer issue first, even inside praise
         return combine(hits), [t["id"] for t in hits], True, "template"
@@ -135,6 +137,9 @@ def decide(text: str, matcher: Matcher, rng: random.Random) -> tuple[str | None,
     if matcher.is_agreement(text):
         return rng.choice(matcher.agreement_replies), ["agreement"], False, "agreement"
     if matcher.is_praise(text):
+        if len(re.findall(r"[^\W\d_]{2,}", text)) < 4 and matcher.emoji_replies:
+            # short hype ("fire 🔥", "love it 😍") -> one emoji, like the account always did
+            return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
         return rng.choice(matcher.praise_replies), ["praise"], False, "praise"
     if "?" in text:
         return None, [], True, "unanswered question"

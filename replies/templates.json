@@ -255,7 +255,37 @@
         "🐐",
         "\\blegend",
         "\\bmamba\\b",
-        "\\bgoated\\b"
+        "\\bgoated\\b",
+        "ronaldo",
+        "\\bcr7\\b",
+        "siu+\\b",
+        "messi",
+        "\\bkobe\\b",
+        "mamba",
+        "jordan",
+        "\\bmj\\b",
+        "lebron",
+        "\\bbron\\b",
+        "curry",
+        "\\bsteph\\b",
+        "tyson",
+        "iverson",
+        "serena",
+        "jon jones",
+        "rodman",
+        "larry bird",
+        "\\bshaq",
+        "neymar",
+        "mbapp",
+        "\\bali\\b",
+        "mcgregor",
+        "\\bkhabib",
+        "federer",
+        "nadal",
+        "djokovic",
+        "\\bbrady\\b",
+        "\\btiger\\b",
+        "bolt"
       ],
       "reply": "🐐"
     }
@@ -320,11 +350,9 @@
       "appreciate you. 🫡",
       "means a lot.",
       "thank you for being here.",
-      "appreciate the support. 🙌",
-      "🫡",
-      "🙌",
-      "🖤"
-    ]
+      "appreciate the support. 🙌"
+    ],
+    "_comment": "words only for a real compliment (4+ words); a short emoji/hype comment gets one emoji"
   },
   "criticism": {
     "_comment": "complaints, corrections, AI/originality questions: never an emoji or CTA; no reply, sent to Discord for a person",

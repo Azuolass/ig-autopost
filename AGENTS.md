@@ -77,7 +77,8 @@ prepare for those dates (push `trigger/prepare.json` `{"from","to","run":<n+1>}`
   emoji-led. Order: spam → skip; bare tag of a friend → skip; emoji only → one emoji from
   `🫡 🧨 🚀 🔥 🙌 🖤 💯 👏`; customer issue → short "DM us your order number" + Discord;
   criticism / AI / originality → no reply, Discord; then templates (e.g. `link in bio 👀`), agreement
-  (`💯`, `always. 🫡`), praise; unknown question → Discord. **Never 🤔 or 🤫.** Don't claim
+  (`💯`, `always. 🫡`), athlete names → `🐐`, fan debates ("messi > ronaldo") → skip, short hype → one
+  emoji, real compliments (4+ words) → words; image/GIF comments (no text in the API) → skip; unknown question → Discord. **Never 🤔 or 🤫.** Don't claim
   worldwide shipping: ask the country. Mentions of @successhunters.prints are ignored when matching.
 - Images: metadata (EXIF/XMP/C2PA) is stripped on every upload. **Do not try to remove or defeat AI
   watermarks (visible or invisible, e.g. SynthID) or Instagram's "AI info" label.** Instagram sometimes

@@ -19,7 +19,8 @@ def test_text_with_emoji_is_not_emoji_only():
     m = Matcher(DATA)
     assert decide("I need this 🔥", m, random.Random(1))[3] == "template"
     assert decide("Facts 🔥", m, random.Random(1))[3] == "agreement"
-    assert decide("so beautiful 🔥", m, random.Random(1))[3] == "praise"
+    assert decide("so beautiful 🔥", m, random.Random(1))[3] == "emoji"
+    assert decide("this is beautiful work, love it", m, random.Random(1))[3] == "praise"
 
 
 def test_never_thinking_or_shush_emoji():
@@ -30,7 +31,7 @@ def test_never_thinking_or_shush_emoji():
 def test_mention_of_our_account_is_ignored():
     m = Matcher(DATA)
     # the real case: "respect 🫡" got 🤔
-    assert decide("@successhunters.prints respect 🫡", m, random.Random(1))[3] == "praise"
+    assert decide("@successhunters.prints respect 🫡", m, random.Random(1))[3] == "emoji"
     assert decide("@successhunters.prints 🫡💵💯", m, random.Random(1))[3] == "emoji"
 
 
@@ -58,3 +59,11 @@ def test_order_issue_inside_praise_still_goes_to_support():
 def test_worldwide_asks_for_the_country():
     m = Matcher(DATA)
     assert decide("Do you ship worldwide?", m, random.Random(1))[0] == "which country are you ordering from?"
+
+
+def test_athlete_fandom_and_debates():
+    m = Matcher(DATA)
+    assert decide("RONALDO 😍", m, random.Random(1))[0] == "🐐"
+    assert decide("Kobe forever", m, random.Random(1))[0] == "🐐"
+    assert decide("Messi > Ronaldo", m, random.Random(1))[0] is None
+    assert decide("", m, random.Random(1))[0] is None  # image/GIF comment: no text from the API
