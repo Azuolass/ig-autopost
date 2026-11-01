@@ -403,3 +403,17 @@ def test_caption_house_style_lowercase_keeps_product_name():
     from autopost.captions import clean_caption
     raw = 'Focus Instagram caption SH IG DAILY 31 October 2026 Cut the noise.\n\nShop now. "Focus". Link in bio.'
     assert clean_caption(raw) == 'cut the noise.\n\nshop now. "Focus". link in bio.'
+
+
+def test_missing_pdf_uses_written_caption():
+    import pytest
+    from autopost import captions
+    kids = [f("01_a.png"), f("02_b.png")]
+    with pytest.raises(RuntimeError):
+        drive.pick_assets(folder("01_X"), kids, 20)
+    a = drive.pick_assets(folder("01_X"), kids, 20, require_caption=False)
+    assert a.caption_pdf is None
+    text = captions.caption_for("2026-11-01#2", a, lambda _id: b"")
+    assert text.startswith("stay different.") and text.endswith('link in bio.')
+    with pytest.raises(RuntimeError):
+        captions.caption_for("1999-01-01#1", a, lambda _id: b"")

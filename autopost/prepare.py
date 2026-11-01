@@ -56,6 +56,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
     d = drive.Drive()
     root = d.list_children(drive.root_folder_id())
     skip_all = music.load_json(ROOT / "review" / "skip.json", {})
@@ -81,8 +82,9 @@ def main(argv=None) -> int:
                 summary.append({"post": key, "error": "missing post folder"})
                 continue
             try:
-                a = drive.pick_assets(pf, d.list_children(pf.id), CONFIG["max_carousel_items"])
-                caption = captions.clean_caption(captions.pdf_to_text(d.download(a.caption_pdf.id)), a.title)
+                a = drive.pick_assets(pf, d.list_children(pf.id), CONFIG["max_carousel_items"],
+                                      require_caption=captions.override_for(key) is None)
+                caption = captions.caption_for(key, a, d.download)
             except Exception as e:
                 summary.append({"post": key, "folder": pf.name, "error": str(e)})
                 print(f"{key}: ERROR {e}")

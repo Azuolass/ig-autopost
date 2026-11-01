@@ -154,3 +154,27 @@ def pdf_to_text(pdf_bytes: bytes) -> str:
     if not text.strip():  # fall back to plain extraction
         text = "\n".join((page.extract_text() or "") for page in reader.pages)
     return text
+
+
+def override_for(key: str) -> str | None:
+    """Caption written for a post whose Drive folder has no caption PDF.
+
+    review/captions.json: {"2026-11-01#2": "line one.\n\nshop now. \"Name\". link in bio."}
+    Used only when the PDF is missing; a PDF in Drive always wins.
+    """
+    import json
+    from pathlib import Path
+    f = Path(__file__).resolve().parent.parent / "review" / "captions.json"
+    if not f.exists():
+        return None
+    text = json.loads(f.read_text(encoding="utf-8")).get(key)
+    return text if isinstance(text, str) and text.strip() else None
+
+
+def caption_for(key: str, assets, download) -> str:
+    if assets.caption_pdf is not None:
+        return clean_caption(pdf_to_text(download(assets.caption_pdf.id)), assets.title)
+    text = override_for(key)
+    if text is None:
+        raise RuntimeError(f"{assets.folder_name}: no instagram_caption*.pdf found and no entry in review/captions.json")
+    return clean_caption(text, assets.title)

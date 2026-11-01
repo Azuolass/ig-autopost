@@ -102,7 +102,9 @@ def fetch_post(day: date, slot: int):
     post_folder = drive.find_post_folder(d.list_children(day_folder.id), slot)
     if not post_folder:
         raise RuntimeError(f"no post folder starting with '{slot:02d}_' in {day_folder.name}")
-    assets = drive.pick_assets(post_folder, d.list_children(post_folder.id), CONFIG["max_carousel_items"])
+    key = post_key(day, slot)
+    assets = drive.pick_assets(post_folder, d.list_children(post_folder.id), CONFIG["max_carousel_items"],
+                               require_caption=captions.override_for(key) is None)
     assets.warnings = warnings + assets.warnings
     skip = music.load_json(ROOT / "review" / "skip.json", {}).get(post_key(day, slot), [])
     if skip:
@@ -112,8 +114,7 @@ def fetch_post(day: date, slot: int):
         assets.warnings.append(f"removed by review: {sorted(skip)} ({before} -> {len(assets.images)} images)")
         if len(assets.images) < 2:
             raise RuntimeError("fewer than 2 images left after review removals")
-    raw = captions.pdf_to_text(d.download(assets.caption_pdf.id))
-    caption = captions.clean_caption(raw, assets.title)
+    caption = captions.caption_for(key, assets, d.download)
     originals = []
     for f in assets.images:
         data = None

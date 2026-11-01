@@ -39,7 +39,7 @@ class PostAssets:
     folder_name: str
     title: str
     images: list[DriveFile]
-    caption_pdf: DriveFile
+    caption_pdf: DriveFile | None
     warnings: list[str] = field(default_factory=list)
 
 
@@ -152,7 +152,8 @@ def title_from_folder(name: str) -> str:
     return re.sub(r"^\s*\d+[_\-\s]*", "", name).replace("_", " ").strip()
 
 
-def pick_assets(post_folder: DriveFile, children: list[DriveFile], max_items: int) -> PostAssets:
+def pick_assets(post_folder: DriveFile, children: list[DriveFile], max_items: int,
+                require_caption: bool = True) -> PostAssets:
     warnings: list[str] = []
     images = [f for f in children if f.mime.startswith("image/")]
     numbered = [f for f in images if leading_number(f.name) is not None]
@@ -170,10 +171,12 @@ def pick_assets(post_folder: DriveFile, children: list[DriveFile], max_items: in
         numbered = numbered[:max_items]
 
     pdfs = [f for f in children if f.mime == "application/pdf" and "caption" in f.name.lower()]
-    if not pdfs:
+    if not pdfs and require_caption:
         raise RuntimeError(f"{post_folder.name}: no instagram_caption*.pdf found")
     # Prefer an "updated" caption, then the most recently modified one.
     pdfs.sort(key=lambda f: ("updated" in f.name.lower(), f.modified), reverse=True)
+    if not pdfs:
+        warnings.append("no caption PDF in Drive, using review/captions.json")
     if len(pdfs) > 1:
         warnings.append(f"several caption PDFs, using '{pdfs[0].name}'")
 
@@ -181,6 +184,6 @@ def pick_assets(post_folder: DriveFile, children: list[DriveFile], max_items: in
         folder_name=post_folder.name,
         title=title_from_folder(post_folder.name),
         images=numbered,
-        caption_pdf=pdfs[0],
+        caption_pdf=pdfs[0] if pdfs else None,
         warnings=warnings,
     )
