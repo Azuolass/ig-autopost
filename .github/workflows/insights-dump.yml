@@ -15,7 +15,7 @@ jobs:
       - env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
-        run: python -m tools.dump_insights
+        run: python -m tools.dump_insights && sudo apt-get -qq install -y ffmpeg >/dev/null && python -m tools.reel_sheets
       - if: always()
         run: |
           mkdir -p out; cd out && git init -q && git checkout -q --orphan insights-out
