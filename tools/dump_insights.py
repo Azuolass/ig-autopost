@@ -5,7 +5,7 @@ from autopost.instagram import Instagram, InstagramError
 cfg = json.load(open("config.json"))
 ig = Instagram(os.environ["IG_ACCESS_TOKEN"], os.environ.get("IG_USER_ID") or "me", cfg["graph_api_base"])
 me = ig.me(); ig.user_id = str(me["user_id"])
-fields = "id,caption,permalink,timestamp,media_type,media_product_type,like_count,comments_count"
+fields = "id,caption,permalink,timestamp,media_type,media_product_type,like_count,comments_count,media_url,thumbnail_url"
 media = list(ig.edge(f"{ig.user_id}/media", fields=fields, limit=50, max_items=400))
 REEL = ["views", "reach", "saved", "shares", "likes", "comments", "total_interactions",
         "ig_reels_avg_watch_time", "ig_reels_video_view_total_time"]
