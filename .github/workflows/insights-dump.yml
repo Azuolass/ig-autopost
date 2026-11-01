@@ -1,0 +1,23 @@
+name: Dump post insights (read only)
+on:
+  push:
+    branches: [claude/reel-insights]
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements.txt
+      - env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: python -m tools.dump_insights
+      - if: always()
+        run: |
+          mkdir -p out; cd out && git init -q && git checkout -q --orphan insights-out
+          git config user.name autopost && git config user.email autopost@users.noreply.github.com
+          git add . && git commit -qm insights --allow-empty && git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" insights-out:insights-out
