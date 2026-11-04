@@ -27,7 +27,7 @@ on demand (`{"date","slot","at"?(UTC),"force"?}`).
 ## 2. Content source (Google Drive)
 
 `<root>/<YYYY.MM>/<D.MM.YYYY>/<NN_Post_Name>/` with images `01_*.png … 13_*.png` (numeric order =
-carousel order, 01 = the original artwork) and `instagram_caption*.pdf` (`*updated*` preferred).
+carousel order, 01 = the original artwork) and `instagram_caption*.pdf` or `instagram_caption*.docx` (`*updated*` preferred).
 Root folder id: secret `DRIVE_ROOT_FOLDER_ID` (falls back to `config.json`). Access via the service
 account in `GOOGLE_SERVICE_ACCOUNT_JSON`. Marketing uploads the folders; nothing to do on our side.
 

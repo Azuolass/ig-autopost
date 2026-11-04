@@ -170,9 +170,10 @@ def pick_assets(post_folder: DriveFile, children: list[DriveFile], max_items: in
         warnings.append(f"{len(numbered)} images, Instagram allows {max_items}; extra ones dropped")
         numbered = numbered[:max_items]
 
-    pdfs = [f for f in children if f.mime == "application/pdf" and "caption" in f.name.lower()]
+    DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    pdfs = [f for f in children if f.mime in ("application/pdf", DOCX) and "caption" in f.name.lower()]
     if not pdfs and require_caption:
-        raise RuntimeError(f"{post_folder.name}: no instagram_caption*.pdf found")
+        raise RuntimeError(f"{post_folder.name}: no instagram_caption*.pdf/.docx found")
     # Prefer an "updated" caption, then the most recently modified one.
     pdfs.sort(key=lambda f: ("updated" in f.name.lower(), f.modified), reverse=True)
     if not pdfs:

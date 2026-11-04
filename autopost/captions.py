@@ -41,7 +41,7 @@ def _norm(s: str) -> str:
 
 _DOC_HEADER = re.compile(
     r"^[^\n]{0,120}?\binstagram\s+caption\b[\s:|-]*(?:sh\s+\w+\s+daily\b)?[\s:|-]*"
-    r"(?:\d{1,2}\s+[a-z]+\s+\d{4}|\d{1,2}[./]\d{1,2}[./]\d{2,4})?\s*", re.I)
+    r"(?:\d{1,2}\s+[a-z]+\s+\d{4}|[a-z]+\s+\d{1,2},?\s+\d{4}|\d{1,2}[./]\d{1,2}[./]\d{2,4})?\s*", re.I)
 
 
 def house_case(text: str) -> str:
@@ -101,6 +101,21 @@ def clean_caption(raw: str, title: str | None = None) -> str:
     if not caption:
         raise ValueError("caption came out empty after cleaning")
     return caption
+
+
+def docx_to_text(data: bytes) -> str:
+    """Paragraphs of a Word caption file, separated by blank lines."""
+    import io
+    import zipfile
+    from xml.etree import ElementTree as ET
+    W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    root = ET.fromstring(zipfile.ZipFile(io.BytesIO(data)).read("word/document.xml"))
+    paras = []
+    for p in root.iter(W + "p"):
+        text = "".join(t.text or "" for t in p.iter(W + "t")).strip()
+        if text:
+            paras.append(text)
+    return "\n\n".join(paras)
 
 
 def pdf_to_text(pdf_bytes: bytes) -> str:
@@ -173,7 +188,9 @@ def override_for(key: str) -> str | None:
 
 def caption_for(key: str, assets, download) -> str:
     if assets.caption_pdf is not None:
-        return clean_caption(pdf_to_text(download(assets.caption_pdf.id)), assets.title)
+        data = download(assets.caption_pdf.id)
+        raw = docx_to_text(data) if assets.caption_pdf.name.lower().endswith(".docx") else pdf_to_text(data)
+        return clean_caption(raw, assets.title)
     text = override_for(key)
     if text is None:
         raise RuntimeError(f"{assets.folder_name}: no instagram_caption*.pdf found and no entry in review/captions.json")

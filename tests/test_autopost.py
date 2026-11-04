@@ -417,3 +417,18 @@ def test_missing_pdf_uses_written_caption():
     assert text.startswith("stay different.") and text.endswith('link in bio.')
     with pytest.raises(RuntimeError):
         captions.caption_for("1999-01-01#1", a, lambda _id: b"")
+
+
+def test_docx_caption():
+    import io, zipfile
+    from autopost.captions import clean_caption, docx_to_text
+    body = "".join(f'<w:p><w:r><w:t>{t}</w:t></w:r></w:p>' for t in [
+        "Instagram caption November 4 2026", "It’s Not Over", "a loss is a lesson. quitting makes it final.",
+        'shop now. "It’s Not Over". link in bio.'])
+    xml = ('<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'
+           + body + '</w:body></w:document>')
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        z.writestr("word/document.xml", xml)
+    out = clean_caption(docx_to_text(buf.getvalue()), "Its Not Over")
+    assert out == 'a loss is a lesson. quitting makes it final.\n\nshop now. "It’s Not Over". link in bio.'
