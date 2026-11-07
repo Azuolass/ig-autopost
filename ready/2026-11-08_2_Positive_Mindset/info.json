@@ -1,0 +1,24 @@
+{
+  "post": "2026-11-08#2",
+  "title": "Positive Mindset",
+  "publish_vilnius": null,
+  "song": "Hustlin' – Rick Ross (150K reels)",
+  "song_index": 53,
+  "images": [
+    "01_artwork_cover.jpg",
+    "02_room_wide.jpg",
+    "003_model_considering.jpg",
+    "03_mounted_oblique.jpg",
+    "04_floor_lean.jpg",
+    "05_model_holding.jpg",
+    "06_wrapped_corner.jpg",
+    "07_print_texture.jpg",
+    "08_floor_flat.jpg",
+    "11_model_positioning.jpg",
+    "20_shop now ig NO BOTTOM.jpg"
+  ],
+  "removed": [],
+  "warnings": [
+    "duplicate image numbers: [1, 2, 3, 3, 4, 5, 6, 7, 8, 11, 20]"
+  ]
+}

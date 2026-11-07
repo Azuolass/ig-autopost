@@ -1,0 +1,147 @@
+[
+  {
+    "post": "2026-11-08#1",
+    "title": "Make Goals",
+    "publish_vilnius": null,
+    "song": "tv off (feat. Lefty Gunplay) – Kendrick Lamar (352K reels)",
+    "song_index": 52,
+    "images": [
+      "01_vertical_cover.jpg",
+      "02_room_wide.jpg",
+      "03_model_considering.jpg",
+      "05_low_angle.jpg",
+      "06_model_holding.jpg",
+      "06_wrapped_corner.jpg",
+      "07_print_texture.jpg",
+      "08_floor_flat.jpg",
+      "11_model_positioning.jpg",
+      "20_shop now ig NO BOTTOM.jpg"
+    ],
+    "removed": [],
+    "warnings": [
+      "duplicate image numbers: [1, 2, 3, 5, 6, 6, 7, 8, 11, 20]"
+    ]
+  },
+  {
+    "post": "2026-11-08#2",
+    "title": "Positive Mindset",
+    "publish_vilnius": null,
+    "song": "Hustlin' – Rick Ross (150K reels)",
+    "song_index": 53,
+    "images": [
+      "01_artwork_cover.jpg",
+      "02_room_wide.jpg",
+      "003_model_considering.jpg",
+      "03_mounted_oblique.jpg",
+      "04_floor_lean.jpg",
+      "05_model_holding.jpg",
+      "06_wrapped_corner.jpg",
+      "07_print_texture.jpg",
+      "08_floor_flat.jpg",
+      "11_model_positioning.jpg",
+      "20_shop now ig NO BOTTOM.jpg"
+    ],
+    "removed": [],
+    "warnings": [
+      "duplicate image numbers: [1, 2, 3, 3, 4, 5, 6, 7, 8, 11, 20]"
+    ]
+  },
+  {
+    "post": "2026-11-08#3",
+    "title": "Money Never Sleeps",
+    "publish_vilnius": null,
+    "song": "The Next Episode (feat. Snoop Dogg) – Dr. Dre (279K reels)",
+    "song_index": 54,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_floor_flat.jpg",
+      "02_model_side_view.jpg",
+      "02_room_wide.jpg",
+      "03_model_considering.jpg",
+      "03_mounted_oblique.jpg",
+      "03_print_texture.jpg",
+      "04_floor_lean.jpg",
+      "11_model_positioning.jpg",
+      "20_shop now ig NO BOTTOM.jpg"
+    ],
+    "removed": [],
+    "warnings": [
+      "duplicate image numbers: [1, 2, 2, 2, 3, 3, 3, 4, 11, 20]"
+    ]
+  },
+  {
+    "post": "2026-11-09#1",
+    "title": "The Man",
+    "publish_vilnius": null,
+    "song": "Mask Off – Future (179K reels)",
+    "song_index": 55,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_room_wide.jpg",
+      "03_model_considering.jpg",
+      "04_mounted_oblique.jpg",
+      "05_model_holding.jpg",
+      "06_wrapped_edge_detail.jpg",
+      "07_model_positioning.jpg",
+      "08_low_angle.jpg",
+      "09_model_side_planning.jpg",
+      "10_floor_lean.jpg",
+      "11_model_floor_support.jpg",
+      "12_floor_flat.jpg",
+      "13_print_closeup.jpg",
+      "14_shop_now.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-11-09#2",
+    "title": "Change The Day",
+    "publish_vilnius": null,
+    "song": "Hate It Or Love It (Album Version) (feat. 50 Cent) – The Game (21K reels)",
+    "song_index": 56,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_room_wide.jpg",
+      "03_model_considering.jpg",
+      "04_mounted_oblique.jpg",
+      "05_model_holding.jpg",
+      "06_wrapped_edge_detail.jpg",
+      "07_model_positioning.jpg",
+      "08_low_angle.jpg",
+      "09_model_side_planning.jpg",
+      "10_floor_lean.jpg",
+      "11_model_floor_support.jpg",
+      "12_floor_flat.jpg",
+      "13_print_closeup.jpg",
+      "14_shop_now.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  },
+  {
+    "post": "2026-11-09#3",
+    "title": "Dont Kill My Vibe",
+    "publish_vilnius": null,
+    "song": "Come & Go (Album Version (Explicit)) – 50 Cent (6.4K reels)",
+    "song_index": 57,
+    "images": [
+      "01_original_artwork.jpg",
+      "02_room_wide.jpg",
+      "03_model_considering.jpg",
+      "04_mounted_oblique.jpg",
+      "05_model_holding.jpg",
+      "06_wrapped_edge_detail.jpg",
+      "07_model_positioning.jpg",
+      "08_low_angle.jpg",
+      "09_model_side_planning.jpg",
+      "10_floor_lean.jpg",
+      "11_model_floor_support.jpg",
+      "12_floor_flat.jpg",
+      "13_print_closeup.jpg",
+      "14_shop_now.jpg"
+    ],
+    "removed": [],
+    "warnings": []
+  }
+]
