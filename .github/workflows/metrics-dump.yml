@@ -1,0 +1,46 @@
+name: Dump recent post metrics (read only)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from autopost.instagram import Instagram
+          cfg = json.load(open("config.json"))
+          ig = Instagram(os.environ["IG_ACCESS_TOKEN"], os.environ.get("IG_USER_ID") or "me", cfg["graph_api_base"])
+          me = ig.me(); ig.user_id = str(me["user_id"])
+          rows = list(ig.edge(f"{ig.user_id}/media", fields="id,caption,permalink,timestamp,media_type,like_count,comments_count", limit=30, max_items=30))
+          out = []
+          for m in rows:
+              r = {k: m.get(k) for k in ("id","timestamp","media_type","permalink","like_count","comments_count")}
+              r["title"] = (m.get("caption") or "").split("\n")[0][:60]
+              try:
+                  ins = ig._call("GET", f"{m['id']}/insights", metric="reach,saved,shares,total_interactions,follows,profile_visits")
+                  for d in ins.get("data", []):
+                      v = d.get("values") or [{}]
+                      r[d["name"]] = d.get("total_value", {}).get("value", v[0].get("value"))
+              except Exception as e:
+                  try:
+                      ins = ig._call("GET", f"{m['id']}/insights", metric="reach,saved,shares,total_interactions")
+                      for d in ins.get("data", []):
+                          v = d.get("values") or [{}]
+                          r[d["name"]] = d.get("total_value", {}).get("value", v[0].get("value"))
+                  except Exception as e2:
+                      r["insights_error"] = str(e2)[:200]
+              out.append(r)
+          json.dump(out, open("state/recent_metrics.json", "w"), indent=1)
+          PY
+          git config user.name autopost; git config user.email autopost@users.noreply.github.com
+          git add state/recent_metrics.json; git commit -qm "recent metrics"; git pull --rebase -q; git push -q
