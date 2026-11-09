@@ -75,10 +75,12 @@ def main(argv=None) -> int:
             day += timedelta(days=1)
             continue
         posts = d.list_children(folder.id)
-        for slot in (1, 2, 3):
+        for slot in (1, 2, 3, 4):
             key = f"{day.isoformat()}#{slot}"
             pf = drive.find_post_folder(posts, slot)
             if not pf:
+                if slot == 4:  # 4th post is optional
+                    continue
                 summary.append({"post": key, "error": "missing post folder"})
                 continue
             try:
