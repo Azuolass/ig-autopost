@@ -1,0 +1,37 @@
+name: Dump recent comments (read only)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from autopost.instagram import Instagram
+          from autopost import comments as C
+          cfg = json.load(open("config.json"))
+          ig = Instagram(os.environ["IG_ACCESS_TOKEN"], os.environ.get("IG_USER_ID") or "me", cfg["graph_api_base"])
+          me = ig.me(); ig.user_id = str(me["user_id"])
+          media = list(ig.edge(f"{ig.user_id}/media", fields="id,timestamp,caption", limit=15, max_items=15))
+          with open("state/recent_comments.txt", "w") as f:
+              for m in media:
+                  rows = list(ig.edge(f"{m['id']}/comments", fields="id,text,timestamp,username,replies{text,username,timestamp}", limit=50, max_items=50))
+                  if not rows: continue
+                  f.write(f"=== {m['timestamp']} {(m.get('caption') or '')[:40]!r}\n")
+                  for c in rows:
+                      f.write(f"- {c.get('timestamp')} {c.get('username')}: {c.get('text')!r}\n")
+                      for r in (c.get('replies') or {}).get('data', []):
+                          f.write(f"    > {r.get('username')}: {r.get('text')!r}\n")
+          PY
+          git config user.name autopost; git config user.email autopost@users.noreply.github.com
+          git add state/recent_comments.txt; git commit -qm "recent comments"; git pull --rebase -q; git push -q
