@@ -146,7 +146,11 @@ def decide(text: str, matcher: Matcher, rng: random.Random) -> tuple[str | None,
     if had_mention:
         # friends talking to each other ("@sam you need this") -> stay out of it
         return None, [], False, "friend tag"
-    if matcher.emoji_replies:  # anything else gets one of our emoji
+    if len(re.findall(r"[^\W\d_]{2,}", text)) >= 4:
+        # a full sentence we don't understand (opinion, jab, sarcasm): an emoji can
+        # read as agreeing with it, so stay quiet and let a person decide
+        return None, [], True, "unclear sentence"
+    if matcher.emoji_replies:  # short leftovers get one of our emoji
         return rng.choice(matcher.emoji_replies), ["emoji"], False, "emoji"
     return None, [], False, "no match"
 

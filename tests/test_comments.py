@@ -68,3 +68,11 @@ def test_all_replies_fit_in_a_comment():
     for t in DATA["templates"]:
         assert len(t["reply"]) < 400
         assert "Send us your" not in t["reply"]  # public comment: always 'send us a DM'
+
+
+def test_unclear_sentence_gets_no_emoji():
+    import random
+    for t in ["Average slogan of pro-slavery company owners🥀",
+              "Will Smith shouldn’t be on keep your composure."]:
+        reply, _, notify, why = decide(t, M, random.Random(0))
+        assert reply is None and notify and why == "unclear sentence"
