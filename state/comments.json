@@ -1597,6 +1597,14 @@
    "ts": "2026-11-14T09:18:42+0000",
    "attempts": 0,
    "action": "own"
+  },
+  "17972503476179043": {
+   "ts": "2026-11-14T11:50:57+0000",
+   "attempts": 1,
+   "action": "template",
+   "templates": [
+    "support"
+   ]
   }
  }
 }
