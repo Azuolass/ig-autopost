@@ -1,0 +1,22 @@
+{
+  "post": "2026-11-21#1",
+  "title": "How Bad Do You Want It",
+  "publish_vilnius": "2026-11-21 15:00",
+  "song": "Superhero (Heroes & Villains) – Metro Boomin, Future, Chris Brown",
+  "song_index": 81,
+  "images": [
+    "01_Artwork_Cover.jpg",
+    "02_Room_Master.jpg",
+    "03_Model_Working.jpg",
+    "06_Wrapped_Corner.jpg",
+    "07_Model_View.jpg",
+    "08_Elevated_View.jpg",
+    "08_Model_Planning.jpg",
+    "09_Print_Texture.jpg",
+    "10_Shop_Now.jpg"
+  ],
+  "removed": [],
+  "warnings": [
+    "duplicate image numbers: [1, 2, 3, 6, 7, 8, 8, 9, 10]"
+  ]
+}

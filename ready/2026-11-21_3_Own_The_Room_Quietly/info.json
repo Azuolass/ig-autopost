@@ -1,0 +1,23 @@
+{
+  "post": "2026-11-21#3",
+  "title": "Own The Room Quietly",
+  "publish_vilnius": "2026-11-21 21:00",
+  "song": "No Role Modelz – J. Cole (41K reels)",
+  "song_index": 83,
+  "images": [
+    "00_walk_like_you_mean_it.jpg",
+    "01_own_the_room_quietly.jpg",
+    "01_quiet_carries_weight.jpg",
+    "02_think_three_moves_ahead.jpg",
+    "05_handle_the_pressure_quietly.jpg",
+    "06_keep_your_circle_solid.jpg",
+    "07_move_with_conviction.jpg",
+    "08_never_beg_for_a_seat.jpg",
+    "09_know_your_next_move.jpg",
+    "10_stay_hungry_in_the_quiet.jpg"
+  ],
+  "removed": [],
+  "warnings": [
+    "duplicate image numbers: [0, 1, 1, 2, 5, 6, 7, 8, 9, 10]"
+  ]
+}
