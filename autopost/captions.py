@@ -96,6 +96,8 @@ def clean_caption(raw: str, title: str | None = None) -> str:
     # as a header that gets joined into the first sentence
     caption = _DOC_HEADER.sub("", caption, count=1).lstrip()
     caption = house_case(caption)
+    # owner's style: the shop line is always its own paragraph
+    caption = re.sub(r"\n*[ \t]*(shop now\.)", r"\n\n\1", caption).lstrip()
     if len(caption) > IG_CAPTION_LIMIT:
         raise ValueError(f"caption is {len(caption)} chars, Instagram allows {IG_CAPTION_LIMIT}")
     if not caption:
