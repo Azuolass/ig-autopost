@@ -1636,6 +1636,14 @@
    "ts": "2026-11-14T14:30:37+0000",
    "attempts": 0,
    "action": "own"
+  },
+  "18122238614074016": {
+   "ts": "2026-11-14T17:12:57+0000",
+   "attempts": 1,
+   "action": "agreement",
+   "templates": [
+    "agreement"
+   ]
   }
  }
 }
