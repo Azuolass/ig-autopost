@@ -2028,6 +2028,14 @@
    "attempts": 0,
    "action": "criticism",
    "templates": []
+  },
+  "18580667773072116": {
+   "ts": "2026-11-18T14:21:08+0000",
+   "attempts": 1,
+   "action": "template",
+   "templates": [
+    "fandom"
+   ]
   }
  }
 }
