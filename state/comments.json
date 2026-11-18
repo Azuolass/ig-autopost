@@ -2112,6 +2112,12 @@
    "attempts": 0,
    "action": "criticism",
    "templates": []
+  },
+  "18122195248755061": {
+   "ts": "2026-11-18T23:45:54+0000",
+   "attempts": 0,
+   "action": "friend tag",
+   "templates": []
   }
  }
 }
