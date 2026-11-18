@@ -2022,6 +2022,12 @@
    "attempts": 0,
    "action": "empty",
    "templates": []
+  },
+  "18150781537637489": {
+   "ts": "2026-11-18T14:09:11+0000",
+   "attempts": 0,
+   "action": "criticism",
+   "templates": []
   }
  }
 }
