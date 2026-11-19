@@ -2182,6 +2182,14 @@
    "attempts": 0,
    "action": "empty",
    "templates": []
+  },
+  "18103696304076202": {
+   "ts": "2026-11-19T17:18:13+0000",
+   "attempts": 1,
+   "action": "agreement",
+   "templates": [
+    "agreement"
+   ]
   }
  }
 }
