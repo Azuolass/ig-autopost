@@ -2441,6 +2441,12 @@
    "ts": "2026-11-21T19:45:02+0000",
    "attempts": 0,
    "action": "own"
+  },
+  "18098642510658327": {
+   "ts": "2026-11-21T21:15:35+0000",
+   "attempts": 0,
+   "action": "unclear sentence",
+   "templates": []
   }
  }
 }
