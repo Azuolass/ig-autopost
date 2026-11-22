@@ -2473,6 +2473,14 @@
    "ts": "2026-11-22T07:31:55+0000",
    "attempts": 0,
    "action": "own"
+  },
+  "18122463334949314": {
+   "ts": "2026-11-22T18:33:37+0000",
+   "attempts": 1,
+   "action": "agreement",
+   "templates": [
+    "agreement"
+   ]
   }
  }
 }
