@@ -2575,6 +2575,14 @@
    "attempts": 0,
    "action": "spam",
    "templates": []
+  },
+  "18115595312064354": {
+   "ts": "2026-11-24T14:54:28+0000",
+   "attempts": 1,
+   "action": "emoji",
+   "templates": [
+    "emoji"
+   ]
   }
  }
 }
