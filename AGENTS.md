@@ -52,7 +52,7 @@ notify, refresh_token, check_setup, prepare). Tests: `python -m pytest -q` (all 
 
 ## 4. Everyday tasks (how to do them)
 
-**Schedule new days** (from 11.14: 3 per day, 01_=15:00, 02_=19:00, 03_=21:00 Vilnius; owner wants a week ahead ready): append to
+**Schedule new days** (from 11.24: 3 per day, 01_=15:00, 02_=17:00, 03_=19:00 Vilnius; owner wants a week ahead ready): append to
 `trigger/queue.json` three lines per day; commit + push to `main`. Before scheduling, optionally run
 prepare for those dates (push `trigger/prepare.json` `{"from","to","run":<n+1>}`), then check
 `summary.json` on branch `prepared` for missing folders, broken files, warnings.
