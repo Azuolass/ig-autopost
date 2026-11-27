@@ -2633,6 +2633,14 @@
    "attempts": 0,
    "action": "criticism",
    "templates": []
+  },
+  "18499207405109455": {
+   "ts": "2026-11-27T15:25:36+0000",
+   "attempts": 1,
+   "action": "emoji",
+   "templates": [
+    "emoji"
+   ]
   }
  }
 }
